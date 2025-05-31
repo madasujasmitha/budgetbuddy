@@ -1,7 +1,18 @@
 "use client"
 
 import { useState } from "react"
-import { Target, Plus, Sparkles, Rocket, Calendar, DollarSign, Briefcase, Award, ChevronRight } from "lucide-react"
+import {
+  Target,
+  Plus,
+  Sparkles,
+  Rocket,
+  Calendar,
+  DollarSign,
+  Briefcase,
+  Award,
+  ChevronRight,
+  BookOpen,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -12,6 +23,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { BackButton } from "@/components/ui/back-button"
+import { GoalSettingTutorial } from "@/components/education/goal-setting-tutorial"
 
 // Sample goals data
 const goals = [
@@ -84,6 +96,7 @@ const quests = [
 export default function GoalsPage() {
   const [activeTab, setActiveTab] = useState("goals")
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false)
+  const [showTutorial, setShowTutorial] = useState(false)
 
   return (
     <div className="container mx-auto p-4 md:p-6">
@@ -159,6 +172,10 @@ export default function GoalsPage() {
           <Button variant="outline">
             <Rocket className="mr-2 h-4 w-4" />
             New Challenge
+          </Button>
+          <Button variant="outline" onClick={() => setShowTutorial(true)}>
+            <BookOpen className="mr-2 h-4 w-4" />
+            Goal Setting Guide
           </Button>
         </div>
       </div>
@@ -368,6 +385,14 @@ export default function GoalsPage() {
           </div>
         </TabsContent>
       </Tabs>
+      <GoalSettingTutorial
+        isOpen={showTutorial}
+        onClose={() => setShowTutorial(false)}
+        onComplete={() => {
+          // Handle tutorial completion
+          console.log("Tutorial completed!")
+        }}
+      />
     </div>
   )
 }
