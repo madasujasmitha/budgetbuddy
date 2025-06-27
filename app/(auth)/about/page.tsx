@@ -26,9 +26,17 @@ export default function AboutPage() {
             <div>
               <h2 className="text-2xl font-bold mb-4">Our Story</h2>
               <p className="text-muted-foreground mb-4">
-                BudgetBuddy was founded in 2023 by a team of financial educators and game designers who saw a gap in
-                financial education for teens. We believed that learning about money shouldn't be boring or
-                intimidating.
+                BudgetBuddy was founded by me, Jasmitha Madasu, in 2025 after I saw a growing gap in financial literacy among teens. As an officer of the Young Investors Society at my school, I witnessed firsthand how many students lacked a basic understanding of money management.
+
+I believed it was essential to create a tool that could make financial education more accessible, engaging, and relevant. In response, I taught over 15 financial literacy classes to more than 30 high school students, helped prepare 50+ students for the CYIA designation (a nationally recognized seal of financial literacy), and organized several charity initiatives, including a holiday donation drive that provided financial literacy books to communities with limited access.
+
+BudgetBuddy came out of everything I learned during that time. It’s built to make personal finance actually make sense for teens — and even make it fun. No lectures. No boring spreadsheets. Just real tools that help you build good money habits from the start.
+
+
+
+
+
+
               </p>
               <p className="text-muted-foreground">
                 By combining game mechanics with solid financial principles, we created a platform that makes managing
@@ -36,8 +44,13 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="bg-muted rounded-lg p-6 aspect-video flex items-center justify-center">
-              <p className="text-muted-foreground">Team photo placeholder</p>
-            </div>
+  <img
+    src="https://media.licdn.com/dms/image/v2/D4E03AQH-T6HqNkGjbA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1732071513712?e=1756339200&v=beta&t=WwttFbPfE3DIQ7cwYnp8EbRfaK3HAoSvooX6WVJ4HOw"
+    alt="Team Photo"
+    className="h-full w-auto rounded-md object-cover"
+  />
+</div>
+
           </div>
 
           <div>
