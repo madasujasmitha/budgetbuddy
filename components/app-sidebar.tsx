@@ -1,6 +1,22 @@
 "use client"
 
-import { BarChart3, Home, Target, Briefcase, MessageSquare, BookText, LogOut, Settings, PlusCircle } from "lucide-react"
+import {
+  BarChart3,
+  Home,
+  Target,
+  Briefcase,
+  MessageSquare,
+  BookText,
+  LogOut,
+  Settings,
+  PlusCircle,
+  TrendingUp,
+  Newspaper,
+  Shield,
+  Leaf,
+  WifiOff,
+  Globe,
+} from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 
@@ -44,6 +60,41 @@ export function AppSidebar() {
       title: "AI Coach",
       icon: MessageSquare,
       href: "/coach",
+    },
+    {
+      title: "Education",
+      icon: BookText,
+      href: "/education",
+    },
+    {
+      title: "Progress",
+      icon: TrendingUp,
+      href: "/progress",
+    },
+    {
+      title: "News Feed",
+      icon: Newspaper,
+      href: "/news",
+    },
+    {
+      title: "Parent Dashboard",
+      icon: Shield,
+      href: "/parent-dashboard",
+    },
+    {
+      title: "Eco Tracker",
+      icon: Leaf,
+      href: "/eco-tracker",
+    },
+    {
+      title: "Offline Mode",
+      icon: WifiOff,
+      href: "/offline",
+    },
+    {
+      title: "Economics Explorer",
+      icon: Globe,
+      href: "/economics",
     },
     {
       title: "Money Journal",
