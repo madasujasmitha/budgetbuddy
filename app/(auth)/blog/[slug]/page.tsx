@@ -1,492 +1,845 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Clock, User, Calendar, ArrowLeft, ChevronRight } from 'lucide-react';
+"use client"
 
-const blogPosts = [
-  {
-    id: "teen-budgeting-basics",
+import { useState } from "react"
+import Link from "next/link"
+import { Calendar, Clock, User, Share2, BookOpen, Heart } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { BackButton } from "@/components/ui/back-button"
+
+// Sample blog posts data
+const blogPosts = {
+  "teen-budgeting-basics": {
     title: "Teen Budgeting Basics: Your First Step to Financial Freedom",
-    summary: "Master the art of budgeting as a teenager with simple, practical strategies that set you up for lifelong financial success.",
-    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
-    author: "Sarah Johnson",
-    date: "2024-01-15",
-    readTime: "3 min read",
-    category: "Budgeting",
-    tags: ["budgeting", "teens", "financial literacy"],
-    keyPoints: [
-      "Use the 50/30/20 rule: 50% needs, 30% wants, 20% savings",
-      "Track all income sources (jobs, allowance, gifts, side hustles)",
-      "Choose your budgeting method: envelope, apps, or spreadsheets",
-      "Start small with emergency fund - even $100 helps with unexpected costs",
-      "Set specific short, medium, and long-term financial goals",
-      "Review your budget weekly and adjust as your life changes"
-    ],
-    fullContent: `Starting your financial journey as a teenager might seem overwhelming, but it's actually the perfect time to build healthy money habits that will serve you for life.
+    excerpt: "Learn the fundamentals of budgeting as a teenager and start building healthy money habits early.",
+    content: `
+# Teen Budgeting Basics: Your First Step to Financial Freedom
+
+Starting your financial journey as a teenager might seem overwhelming, but it's actually the perfect time to build healthy money habits that will serve you for life. Let's break down the basics of budgeting in a way that's practical and achievable for teens.
 
 ## Why Budget as a Teen?
 
-Budgeting isn't just about restricting your spending – it's about taking control of your money and making intentional decisions. When you budget as a teen, you learn valuable life skills early, develop discipline, reduce financial stress, and prepare for adult responsibilities.
+Budgeting isn't just for adults with mortgages and car payments. As a teen, you have unique advantages:
 
-## The 50/30/20 Rule for Teens
+- **Fewer fixed expenses** - Most of your money is discretionary
+- **Time to learn** - You can make mistakes without major consequences
+- **Compound benefits** - Good habits formed now will pay dividends later
 
-- **50% for Needs**: Essential expenses like school supplies, transportation, or contributions to family expenses
-- **30% for Wants**: Entertainment, eating out with friends, hobbies, and fun purchases  
-- **20% for Savings**: Building your emergency fund and saving for bigger goals
+## The 50/30/20 Rule (Teen Edition)
+
+The classic budgeting rule can be adapted for teenagers:
+
+- **50% for Needs** - School supplies, transportation, essential clothing
+- **30% for Wants** - Entertainment, dining out, hobbies, non-essential shopping
+- **20% for Savings** - Emergency fund, future goals, investments
 
 ## Getting Started: Your First Budget
 
-### Track Your Income
-List all money sources: part-time job wages, allowance, chore money, gifts, and side hustles like babysitting or lawn care.
+### Step 1: Track Your Income
+List all sources of money coming in:
+- Allowance from parents
+- Part-time job earnings
+- Birthday/holiday money
+- Odd jobs (babysitting, lawn mowing, etc.)
 
-### List Your Expenses
-Write down everything: fixed expenses (phone bill, transportation) and variable expenses (food, entertainment, clothes).
+### Step 2: List Your Expenses
+Common teen expenses include:
+- Food and snacks
+- Entertainment (movies, games, streaming)
+- Transportation (gas, bus fare)
+- Clothing and accessories
+- School-related costs
+- Personal care items
 
-### Choose Your Method
-- **Envelope Method**: Use cash for different spending categories
-- **Digital Apps**: Use budgeting apps designed for teens
-- **Spreadsheet**: Create a simple budget tracker
-- **Notebook**: Keep a written record
-
-## Building Your Emergency Fund
-
-Start small – even $100 can help with phone repairs, emergency transportation, last-minute school supplies, or medical expenses.
-
-## Setting Financial Goals
-
+### Step 3: Set Savings Goals
+Having specific goals makes saving more motivating:
 - **Short-term** (1-3 months): New video game, concert tickets
-- **Medium-term** (3-12 months): New laptop, car savings  
-- **Long-term** (1+ years): College fund, first apartment deposit
+- **Medium-term** (6-12 months): Laptop, vacation with friends
+- **Long-term** (1+ years): Car, college fund
 
-The habits you build now will compound over time. Starting early gives you a huge advantage over someone who begins these habits in their 20s or 30s.`
+## Budgeting Tools for Teens
+
+### Apps and Digital Tools
+- **BudgetBuddy** (of course!) - Gamified budgeting for teens
+- **Mint** - Free comprehensive budgeting app
+- **YNAB** (You Need A Budget) - Zero-based budgeting
+- **PiggyBot** - Visual savings tracker
+
+### Old-School Methods
+- **Envelope system** - Cash in labeled envelopes for each category
+- **Spreadsheet** - Simple and customizable
+- **Notebook** - Write down every expense
+
+## Common Teen Budgeting Mistakes
+
+### 1. Being Too Restrictive
+Don't cut out all fun money - you'll just end up breaking your budget. Allow for entertainment and spontaneous purchases.
+
+### 2. Forgetting Small Expenses
+Those $3 coffee runs and $5 snacks add up quickly. Track everything for at least a month to see where your money really goes.
+
+### 3. Not Planning for Irregular Expenses
+School events, friend's birthdays, and seasonal activities happen throughout the year. Set aside money for these "surprise" expenses.
+
+### 4. Comparing to Others
+Your budget should reflect YOUR priorities and financial situation, not your friends'. Focus on your own goals.
+
+## Making Budgeting Fun
+
+### Gamify Your Savings
+- Set up challenges with friends
+- Reward yourself for hitting milestones
+- Use apps that turn saving into a game
+
+### Visual Progress Tracking
+- Create charts or graphs
+- Use a savings thermometer
+- Take photos of your growing savings
+
+### Celebrate Wins
+When you reach a savings goal or stick to your budget for a month, celebrate! This positive reinforcement helps build lasting habits.
+
+## Advanced Tips for Teen Budgeters
+
+### The Power of Automation
+Set up automatic transfers to savings accounts. Even $10 per week adds up to over $500 per year!
+
+### Learn About Compound Interest
+Understanding how money grows over time will motivate you to save more. Even small amounts invested early can become substantial sums later.
+
+### Track Your Net Worth
+As you accumulate savings and possibly some investments, tracking your total net worth can be incredibly motivating.
+
+## Dealing with Peer Pressure
+
+One of the biggest challenges for teen budgeters is social pressure to spend. Here are strategies to handle this:
+
+### Be Honest with Friends
+Real friends will understand if you can't afford something. Suggest free or low-cost alternatives.
+
+### Plan Ahead for Social Events
+If you know there's a concert or event coming up, start saving for it early rather than going into debt.
+
+### Find Budget-Friendly Social Activities
+- Movie nights at home
+- Potluck dinners
+- Free community events
+- Outdoor activities like hiking or beach days
+
+## Building for the Future
+
+Your teen budgeting skills are laying the foundation for major financial decisions ahead:
+
+### College Planning
+Understanding budgeting will help you make informed decisions about college costs and student loans.
+
+### First Job Negotiations
+Knowing your expenses helps you understand what salary you need to maintain your lifestyle.
+
+### Major Purchases
+The discipline you build now will help you save for big purchases like cars and eventually homes.
+
+## Conclusion
+
+Budgeting as a teen isn't about restricting your fun - it's about making intentional choices with your money so you can afford the things that matter most to you. Start simple, be consistent, and don't be afraid to adjust your budget as your life changes.
+
+Remember, the goal isn't perfection. It's progress. Every dollar you track and every goal you reach is building financial skills that will benefit you for the rest of your life.
+
+*Ready to start your budgeting journey? Download BudgetBuddy and turn your financial goals into an exciting adventure!*
+    `,
+    author: "Sarah Johnson",
+    date: "2024-01-15",
+    readTime: "8 min read",
+    category: "Budgeting",
+    tags: ["budgeting", "teens", "money management", "savings"],
+    image: "/placeholder.svg?height=400&width=800",
   },
-  {
-    id: "first-job-money-tips",
-    title: "Got Your First Job? Handle Your Money Like a Pro",
-    summary: "Turn your first paycheck into the foundation of your financial future with smart money management strategies designed for new workers.",
-    image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&h=400&fit=crop",
-    author: "Mike Chen", 
+  "summer-job-guide": {
+    title: "The Ultimate Summer Job Guide for Teens",
+    excerpt: "Discover the best summer job opportunities for teenagers and learn how to land your first job.",
+    content: `
+# The Ultimate Summer Job Guide for Teens
+
+Summer break is the perfect time to earn some money, gain work experience, and develop valuable life skills. Whether you're saving for college, a car, or just want some spending money, finding the right summer job can set you up for success.
+
+## Why Get a Summer Job?
+
+### Financial Benefits
+- Earn money for personal expenses
+- Start building savings
+- Learn the value of hard work
+- Reduce financial burden on parents
+
+### Life Skills Development
+- Time management
+- Communication skills
+- Responsibility and reliability
+- Customer service experience
+- Teamwork and collaboration
+
+### Career Exploration
+- Discover interests and strengths
+- Build your resume
+- Network with professionals
+- Gain references for future opportunities
+
+## Best Summer Jobs for Teens
+
+### Traditional Teen Jobs
+
+#### 1. Retail Associate
+**What you'll do:** Help customers, organize merchandise, operate cash registers
+**Skills gained:** Customer service, sales, money handling
+**Average pay:** $10-15/hour
+**Pros:** Flexible hours, employee discounts
+**Cons:** Can be repetitive, dealing with difficult customers
+
+#### 2. Food Service Worker
+**What you'll do:** Take orders, prepare food, clean dining areas
+**Skills gained:** Multitasking, working under pressure, food safety
+**Average pay:** $9-14/hour + tips
+**Pros:** Fast-paced environment, potential for tips
+**Cons:** Can be stressful during busy periods
+
+#### 3. Lifeguard
+**What you'll do:** Monitor swimmers, enforce safety rules, perform rescues if needed
+**Skills gained:** Leadership, emergency response, responsibility
+**Average pay:** $12-18/hour
+**Pros:** Outdoor work, important responsibility
+**Cons:** Requires certification, high responsibility
+
+### Modern Opportunities
+
+#### 4. Social Media Assistant
+**What you'll do:** Create content, manage posts, engage with followers
+**Skills gained:** Digital marketing, content creation, analytics
+**Average pay:** $12-20/hour
+**Pros:** Builds relevant skills, creative work
+**Cons:** May require portfolio, competitive field
+
+#### 5. Tutoring
+**What you'll do:** Help younger students with homework and test prep
+**Skills gained:** Teaching, patience, subject expertise
+**Average pay:** $15-25/hour
+**Pros:** Flexible schedule, rewarding work
+**Cons:** Requires strong academic skills
+
+#### 6. Pet Care Services
+**What you'll do:** Dog walking, pet sitting, basic grooming
+**Skills gained:** Responsibility, animal care, time management
+**Average pay:** $10-20/hour
+**Pros:** Work with animals, flexible hours
+**Cons:** Weather-dependent, requires reliability
+
+### Entrepreneurial Options
+
+#### 7. Lawn Care Service
+**What you'll do:** Mow lawns, trim hedges, basic landscaping
+**Skills gained:** Business management, physical fitness, customer relations
+**Average pay:** $20-40 per lawn
+**Pros:** Be your own boss, good exercise
+**Cons:** Weather-dependent, requires equipment
+
+#### 8. Photography Services
+**What you'll do:** Event photography, portrait sessions, photo editing
+**Skills gained:** Technical skills, creativity, business development
+**Average pay:** $50-200 per session
+**Pros:** Creative work, build portfolio
+**Cons:** Requires equipment and skills
+
+## How to Find Summer Jobs
+
+### Online Job Boards
+- **Indeed Teen Jobs** - Filter specifically for teen-friendly positions
+- **Snagajob** - Part-time and hourly positions
+- **Local Facebook Groups** - Community job postings
+- **Company Websites** - Apply directly to businesses you're interested in
+
+### Traditional Methods
+- **Walk-ins** - Visit local businesses with your resume
+- **Networking** - Ask family, friends, and teachers about opportunities
+- **School Resources** - Check with guidance counselors
+- **Community Centers** - Often have job boards
+
+### Seasonal Opportunities
+- **Summer camps** - Counselor positions
+- **Amusement parks** - Various seasonal roles
+- **Ice cream shops** - Busy during summer months
+- **Pool maintenance** - Seasonal demand
+
+## Preparing for Your Job Search
+
+### Create a Strong Resume
+Even without work experience, you can highlight:
+- Academic achievements
+- Volunteer work
+- Extracurricular activities
+- Relevant skills (computer skills, languages, etc.)
+- Personal projects
+
+### Practice Interview Skills
+Common questions for teen applicants:
+- "Why do you want this job?"
+- "What are your strengths and weaknesses?"
+- "How would you handle a difficult customer?"
+- "What are your availability and schedule preferences?"
+
+### Gather Required Documents
+- Social Security card
+- Birth certificate or passport
+- Work permit (if required in your state)
+- Bank account information for direct deposit
+
+## Legal Considerations for Teen Workers
+
+### Age Restrictions
+- **14-15 years old:** Limited hours and job types
+- **16-17 years old:** More opportunities but still some restrictions
+- **18+ years old:** Full adult work privileges
+
+### Hour Limitations
+During school year:
+- Maximum 3 hours on school days
+- Maximum 18 hours per week
+- No work before 7 AM or after 7 PM
+
+During summer:
+- Maximum 8 hours per day
+- Maximum 40 hours per week
+- Extended evening hours (until 9 PM)
+
+### Prohibited Jobs for Minors
+- Operating dangerous machinery
+- Working with hazardous chemicals
+- Jobs involving alcohol service
+- Certain construction work
+
+## Making the Most of Your Summer Job
+
+### Set Clear Goals
+- How much money do you want to earn?
+- What skills do you want to develop?
+- What experience do you want to gain?
+
+### Be Professional
+- Arrive on time (or early)
+- Dress appropriately
+- Follow instructions carefully
+- Ask questions when unsure
+- Take initiative when appropriate
+
+### Build Relationships
+- Get to know your coworkers
+- Be respectful to supervisors
+- Network with customers when appropriate
+- Ask for feedback regularly
+
+### Track Your Earnings
+- Monitor your paychecks
+- Understand deductions (taxes, etc.)
+- Set aside money for savings goals
+- Track expenses related to work
+
+## Managing Work and Summer Fun
+
+### Create a Schedule
+- Block out work hours
+- Plan time for friends and family
+- Schedule rest and relaxation
+- Don't forget about summer reading or prep for next school year
+
+### Communicate with Employers
+- Be upfront about vacation plans
+- Request time off well in advance
+- Offer to find coverage when needed
+- Be flexible when possible
+
+## Turning Summer Work into Future Opportunities
+
+### Ask for References
+Before your job ends, ask supervisors if they'd be willing to serve as references for future applications.
+
+### Request a Letter of Recommendation
+A written recommendation can be valuable for college applications and future job searches.
+
+### Stay Connected
+Keep in touch with employers and coworkers - they might know about future opportunities.
+
+### Update Your Resume
+Add your summer job experience, highlighting specific achievements and skills gained.
+
+## Common Summer Job Challenges and Solutions
+
+### Challenge: Balancing Work and Social Life
+**Solution:** Communicate your schedule to friends and plan activities around work hours.
+
+### Challenge: Dealing with Difficult Customers
+**Solution:** Stay calm, listen actively, and ask for supervisor help when needed.
+
+### Challenge: Managing Money Earned
+**Solution:** Set up a savings plan before you start working and stick to it.
+
+### Challenge: Transportation to Work
+**Solution:** Arrange reliable transportation before accepting a job offer.
+
+## Conclusion
+
+A summer job is more than just a way to earn money - it's an investment in your future. The skills, experience, and work ethic you develop during your first job will benefit you throughout your career.
+
+Start your job search early, be persistent, and don't get discouraged if you don't land the first job you apply for. Every application and interview is valuable practice for the future.
+
+Remember, your first job doesn't have to be your dream job. Focus on learning, growing, and proving that you're a reliable, hardworking employee. These qualities will open doors to better opportunities in the future.
+
+*Ready to start your job search? Use BudgetBuddy to track your earnings and manage your money like a pro!*
+    `,
+    author: "Mike Chen",
     date: "2024-01-10",
-    readTime: "4 min read",
+    readTime: "12 min read",
     category: "Career",
-    tags: ["first job", "income", "career"],
-    keyPoints: [
-      "Pay yourself first - save before spending, even if it's just $20",
-      "Don't lifestyle-inflate too quickly - resist upgrading everything at once",
-      "Open checking and high-yield savings accounts for better money management",
-      "Set up automatic transfers to make saving effortless (10-20% of income)",
-      "Understand your paycheck: gross vs net pay, taxes, and deductions",
-      "Build a $500-1000 emergency fund to cover unexpected expenses"
-    ],
-    fullContent: `Landing your first job is exciting! But how you handle your new income will set the tone for your entire financial future.
-
-## The Golden Rules of First-Job Money Management
-
-### Rule #1: Pay Yourself First
-Before you spend a single dollar, set aside money for savings. Even if it's just $20 from your first paycheck, make saving a non-negotiable habit from day one.
-
-### Rule #2: Don't Lifestyle Inflate Too Quickly  
-Just because you have money doesn't mean you need to upgrade everything immediately. Resist the urge to suddenly buy expensive clothes, gadgets, or start eating out constantly.
-
-### Rule #3: Track Every Dollar
-When money is new to you, it's easy to lose track of where it goes. Use an app, spreadsheet, or notebook to monitor your spending.
-
-## Smart Moves for Your First Job Income
-
-### Open the Right Bank Accounts
-- **Checking Account**: For daily expenses and bills
-- **Savings Account**: For your emergency fund and goals
-- **High-Yield Savings**: Earn more interest on your savings
-
-### Set Up Automatic Transfers
-Make saving effortless by automatically transferring a portion of each paycheck to savings. Start with 10-20% if possible.
-
-### The Teen Worker's Budget Framework:
-- **40% for Current Expenses**: Transportation, food, entertainment
-- **30% for Savings Goals**: Emergency fund, big purchases, college
-- **20% for Long-term Savings**: Future goals, investments  
-- **10% for Fun Money**: Guilt-free spending on whatever you want
-
-## Building Your Professional Financial Habits
-
-Start an emergency fund aiming for $500-1000 initially. This covers car repairs, medical expenses, job loss buffer, and unexpected opportunities.
-
-Learn about investing basics: compound interest, different investment accounts, and risk vs reward concepts.
-
-Consider building credit responsibly through becoming an authorized user on a parent's card or getting a secured credit card.
-
-Your first job is more than just making money – it's your first step into financial adulthood. The habits you build now will serve you for decades to come.`
+    tags: ["summer jobs", "teens", "career", "work experience"],
+    image: "/placeholder.svg?height=400&width=800",
   },
-  {
-    id: "saving-for-college", 
-    title: "Saving for College: A Teen's Complete Guide",
-    summary: "College costs are high, but smart saving strategies can dramatically reduce your future debt burden and financial stress.",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9d1?w=600&h=400&fit=crop",
-    author: "Dr. Lisa Rodriguez",
-    date: "2024-01-05", 
-    readTime: "5 min read",
-    category: "Education",
-    tags: ["college", "education", "savings"],
-    keyPoints: [
-      "College costs: Public in-state ~$10-15K/year, Private ~$35-50K+/year",
-      "Use the 1/3 rule: 1/3 savings, 1/3 financial aid, 1/3 current income",
-      "Starting at 14 vs 17: Save $278/month vs $833/month for $20K goal",
-      "Consider 529 plans for tax-advantaged education savings",
-      "Maximize gift money - ask relatives to contribute to college fund",
-      "Hunt scholarships early: academic, athletic, community service, essays"
-    ],
-    fullContent: `College costs can seem overwhelming, but here's good news: every dollar you save now is a dollar you won't have to borrow later.
+  "saving-for-college": {
+    title: "Smart Strategies for Saving for College",
+    excerpt: "Learn effective ways to save money for college expenses and reduce student debt.",
+    content: `
+# Smart Strategies for Saving for College
+
+College costs continue to rise, making it more important than ever to start saving early. Whether you're a freshman in high school or a senior preparing for graduation, it's never too early or too late to start building your college fund.
 
 ## Understanding College Costs
 
 ### Tuition and Fees
-- Public in-state: ~$10,000-15,000/year
-- Public out-of-state: ~$25,000-35,000/year  
-- Private colleges: ~$35,000-50,000+/year
+- **Public in-state:** $10,000-15,000 per year
+- **Public out-of-state:** $25,000-35,000 per year
+- **Private colleges:** $35,000-55,000 per year
 
-### Additional Costs
-- Room and Board: ~$10,000-15,000/year
-- Books and supplies: ~$1,200/year
-- Transportation: ~$1,000/year
-- Personal expenses: ~$2,000/year
+### Additional Expenses
+- Room and board: $10,000-15,000 per year
+- Books and supplies: $1,000-2,000 per year
+- Transportation: $500-2,000 per year
+- Personal expenses: $1,000-3,000 per year
 
-## The Power of Starting Early
+### Total Annual Costs
+- **Community college:** $3,000-8,000
+- **Public four-year:** $20,000-30,000
+- **Private four-year:** $45,000-70,000
 
-Saving $20,000 for college:
-- Starting at 14: Save ~$278/month for 4 years
-- Starting at 16: Save ~$417/month for 4 years  
-- Starting at 17: Save ~$833/month for 2 years
+## Starting Early: The Power of Compound Interest
 
-The earlier you start, the less you need to save each month!
+### Age 14: $50/month = $2,400 by graduation
+### Age 16: $75/month = $2,700 by graduation
+### Age 18: $200/month = $2,400 in one year
+
+The earlier you start, the less you need to save each month to reach your goals.
 
 ## College Savings Strategies
 
-### Strategy 1: The 529 Education Savings Plan
-- Tax-advantaged savings specifically for education
-- Parents usually open these, but you can contribute
-- Money grows tax-free when used for qualified education expenses
+### 1. 529 Education Savings Plans
+**Pros:**
+- Tax-free growth and withdrawals for education
+- High contribution limits
+- Some states offer tax deductions
 
-### Strategy 2: High-Yield Savings Account  
-- Safe and accessible
-- Earns more interest than regular savings
-- Good for short-term college savings
+**Cons:**
+- Penalties for non-education withdrawals
+- Limited investment options
+- May affect financial aid eligibility
 
-### Strategy 3: Custodial Investment Account
-- Potential for higher returns
-- More risk than savings accounts
-- Good for longer-term savings (3+ years until college)
+### 2. Coverdell Education Savings Account (ESA)
+**Pros:**
+- Tax-free growth and withdrawals
+- Can be used for K-12 expenses
+- More investment flexibility
 
-## The 1/3 Rule
+**Cons:**
+- Low contribution limits ($2,000/year)
+- Income restrictions for contributors
+- Must be used by age 30
 
-Plan to cover college costs through:
-- 1/3 savings (yours and parents')
-- 1/3 financial aid/scholarships
-- 1/3 current income (part-time work during college)
+### 3. UGMA/UTMA Custodial Accounts
+**Pros:**
+- No contribution limits
+- Flexible use of funds
+- Tax advantages for first $2,200 of earnings
 
-## Creative Ways to Boost College Savings
+**Cons:**
+- Becomes child's asset at age of majority
+- May significantly impact financial aid
+- No tax deduction for contributions
 
-Ask relatives to contribute to your college fund instead of traditional gifts. Start side hustles like tutoring, pet sitting, selling crafts online, or seasonal work.
+### 4. High-Yield Savings Accounts
+**Pros:**
+- FDIC insured
+- Easy access to funds
+- No penalties for withdrawals
 
-Begin scholarship hunting early - many are available for high school students including academic, athletic, community service awards, essay contests, and unique talent scholarships.
+**Cons:**
+- Lower returns than investments
+- May not keep pace with college cost inflation
+- Taxable interest income
+
+## Creative Ways to Save for College
+
+### Automatic Savings
+Set up automatic transfers to your college fund:
+- $25 per week = $1,300 per year
+- $50 per month = $600 per year
+- Round-up programs that save spare change
+
+### Birthday and Holiday Money
+Instead of spending gift money immediately:
+- Save 50% of all monetary gifts
+- Ask relatives to contribute to college fund instead of toys
+- Create a "college fund" wish list for family
+
+### Summer Job Strategy
+Dedicate a portion of summer earnings:
+- Save 60% of summer job income
+- Work extra hours specifically for college fund
+- Take on additional responsibilities for higher pay
+
+### Side Hustles and Gig Work
+- Tutoring younger students
+- Pet sitting and dog walking
+- Selling crafts or artwork online
+- Freelance services (writing, design, social media)
 
 ## Reducing College Costs
 
-Take AP classes for college credit, consider dual enrollment, start at community college then transfer, choose in-state public universities, and look for schools with good financial aid.
+### Academic Strategies
+- **Dual enrollment:** Earn college credits in high school
+- **AP courses:** Test out of introductory college classes
+- **CLEP exams:** Earn credit by examination
+- **Summer courses:** Graduate early or reduce course load
 
-The goal isn't to save every penny for college – it's to reduce the financial burden so you can focus on learning and building your career.`
+### Financial Strategies
+- **Community college:** Complete general education requirements
+- **In-state tuition:** Attend public universities in your state
+- **Merit scholarships:** Maintain high GPA and test scores
+- **Work-study programs:** Earn money while attending school
+
+### Lifestyle Choices
+- **Live at home:** Save on room and board costs
+- **Buy used textbooks:** Save hundreds per semester
+- **Cook your own meals:** Avoid expensive meal plans
+- **Use student discounts:** Take advantage of reduced rates
+
+## Scholarship and Grant Strategies
+
+### Merit-Based Scholarships
+- Maintain high GPA (3.5+)
+- Participate in extracurricular activities
+- Develop leadership skills
+- Excel in standardized tests
+
+### Need-Based Aid
+- Complete FAFSA early and accurately
+- Apply to schools that meet full financial need
+- Consider schools where you're above average academically
+
+### Specialized Scholarships
+- Local community organizations
+- Professional associations
+- Employer-sponsored programs
+- Minority and first-generation college student programs
+
+## Working During College
+
+### On-Campus Jobs
+- Work-study positions
+- Research assistant roles
+- Campus tour guide
+- Residence hall advisor
+
+### Off-Campus Opportunities
+- Internships in your field
+- Part-time retail or food service
+- Freelance work
+- Tutoring services
+
+### Balancing Work and Studies
+- Limit work to 10-15 hours per week
+- Choose jobs related to your major when possible
+- Use time management tools and techniques
+- Prioritize academics over work income
+
+## Alternative Education Paths
+
+### Community College Transfer
+- Complete first two years at community college
+- Transfer to four-year university
+- Save $20,000-40,000 on total education costs
+
+### Trade Schools and Certificates
+- Shorter programs (6 months to 2 years)
+- Lower total costs
+- High-demand career fields
+- Good earning potential
+
+### Online Degree Programs
+- Often less expensive than traditional programs
+- Flexible scheduling for working students
+- No room and board costs
+- Growing acceptance by employers
+
+## Creating Your College Savings Plan
+
+### Step 1: Set Your Goal
+- Research costs at target schools
+- Decide what percentage you want to save
+- Set realistic timeline and milestones
+
+### Step 2: Choose Your Savings Vehicle
+- Consider tax advantages
+- Evaluate investment options
+- Think about accessibility needs
+
+### Step 3: Automate Your Savings
+- Set up automatic transfers
+- Use apps that round up purchases
+- Direct deposit portion of paychecks
+
+### Step 4: Track Your Progress
+- Review savings monthly
+- Adjust contributions as income changes
+- Celebrate milestones reached
+
+## Common Mistakes to Avoid
+
+### Starting Too Late
+Even if you're a senior, every dollar saved reduces future debt.
+
+### Putting All Money in Low-Yield Accounts
+For long-term savings, consider investment options for better growth.
+
+### Not Applying for Financial Aid
+Many families assume they won't qualify but are surprised by aid offers.
+
+### Borrowing More Than Necessary
+Only borrow what you truly need for education expenses.
+
+### Not Considering All Options
+Explore all types of schools and programs before making decisions.
+
+## The Psychology of College Saving
+
+### Make It Visual
+- Create charts showing progress toward goals
+- Use apps that gamify saving
+- Post pictures of target schools as motivation
+
+### Involve Family
+- Make college saving a family goal
+- Ask relatives to contribute instead of giving other gifts
+- Share progress and celebrate milestones together
+
+### Stay Motivated
+- Visit college campuses to maintain excitement
+- Connect savings to specific goals (textbooks, laptop, etc.)
+- Remember that every dollar saved is a dollar not borrowed
+
+## Conclusion
+
+Saving for college requires planning, discipline, and creativity, but the payoff is enormous. Every dollar you save now is a dollar you won't have to borrow later, potentially saving you thousands in interest over the life of student loans.
+
+Start where you are, with what you have. Whether it's $5 a week or $50 a month, consistent saving habits will serve you well throughout your life. Remember, the goal isn't to save every penny for college - it's to reduce the financial burden and give yourself more options.
+
+The investment you make in your education today will pay dividends for the rest of your life. Start saving now, and your future self will thank you.
+
+*Track your college savings progress with BudgetBuddy and turn your education goals into an achievable quest!*
+    `,
+    author: "Dr. Emily Rodriguez",
+    date: "2024-01-05",
+    readTime: "15 min read",
+    category: "Savings",
+    tags: ["college", "savings", "education", "financial planning"],
+    image: "/placeholder.svg?height=400&width=800",
+  },
+}
+
+// Get related posts (excluding current post)
+const getRelatedPosts = (currentSlug: string, currentCategory: string) => {
+  return Object.entries(blogPosts)
+    .filter(([slug]) => slug !== currentSlug)
+    .map(([slug, post]) => ({ slug, ...post }))
+    .filter((post) => post.category === currentCategory)
+    .slice(0, 3)
+}
+
+interface BlogPostPageProps {
+  params: {
+    slug: string
   }
-];
+}
 
-export default function TeenFinanceBlog() {
-  const [currentView, setCurrentView] = useState('summary'); // 'summary' or 'full'
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [showAllArticles, setShowAllArticles] = useState(false);
+export default function BlogPostPage({ params }: BlogPostPageProps) {
+  const [isLiked, setIsLiked] = useState(false)
+  const [likes, setLikes] = useState(Math.floor(Math.random() * 100) + 20)
 
-  const handleReadMore = (post) => {
-    setSelectedPost(post);
-    setCurrentView('full');
-  };
+  const post = blogPosts[params.slug as keyof typeof blogPosts]
 
-  const handleBackToSummary = () => {
-    setCurrentView('summary');
-    setSelectedPost(null);
-  };
-
-  const handleViewAllArticles = () => {
-    setShowAllArticles(true);
-  };
-
-  const handleBackToHome = () => {
-    setShowAllArticles(false);
-  };
-
-  // Full Article View
-  if (currentView === 'full' && selectedPost) {
+  if (!post) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          <Button 
-            onClick={handleBackToSummary}
-            variant="ghost" 
-            className="mb-6 hover:bg-white/50"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Summary
-          </Button>
-
-          <Card className="bg-white/80 backdrop-blur-sm shadow-xl border-0">
-            <CardHeader className="pb-6">
-              <img
-                src={selectedPost.image}
-                alt={selectedPost.title}
-                className="w-full h-64 object-cover rounded-lg mb-6"
-              />
-              <Badge variant="secondary" className="w-fit mb-3">
-                {selectedPost.category}
-              </Badge>
-              <CardTitle className="text-3xl font-bold text-gray-800 leading-tight">
-                {selectedPost.title}
-              </CardTitle>
-              <div className="flex items-center gap-6 text-sm text-gray-600 mt-4">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span>{selectedPost.author}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>{new Date(selectedPost.date).toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span>{selectedPost.readTime}</span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                {selectedPost.fullContent.split('\n').map((paragraph, index) => {
-                  if (paragraph.startsWith('## ')) {
-                    return (
-                      <h2 key={index} className="text-2xl font-bold mt-8 mb-4 text-gray-800">
-                        {paragraph.slice(3)}
-                      </h2>
-                    );
-                  } else if (paragraph.startsWith('### ')) {
-                    return (
-                      <h3 key={index} className="text-xl font-semibold mt-6 mb-3 text-gray-800">
-                        {paragraph.slice(4)}
-                      </h3>
-                    );
-                  } else if (paragraph.startsWith('- ')) {
-                    return (
-                      <li key={index} className="ml-4 mb-2">
-                        {paragraph.slice(2)}
-                      </li>
-                    );
-                  } else if (paragraph.trim() === '') {
-                    return <br key={index} />;
-                  } else {
-                    return (
-                      <p key={index} className="mb-4">
-                        {paragraph}
-                      </p>
-                    );
-                  }
-                })}
-              </div>
-              
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="flex flex-wrap gap-2">
-                  {selectedPost.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="bg-blue-50">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Post Not Found</h1>
+          <Link href="/blog">
+            <Button>Back to Blog</Button>
+          </Link>
         </div>
       </div>
-    );
+    )
   }
 
-  // All Articles View
-  if (showAllArticles) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        <div className="container mx-auto px-4 py-8">
-          <Button 
-            onClick={handleBackToHome}
-            variant="ghost" 
-            className="mb-6 hover:bg-white/50"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
-          </Button>
+  const relatedPosts = getRelatedPosts(params.slug, post.category)
 
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              Teen Finance Hub
-            </h1>
-            <p className="text-xl text-gray-600">
-              Quick-read financial tips for teenagers
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post) => (
-              <Card key={post.id} className="bg-white/80 backdrop-blur-sm shadow-lg border-0 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <CardHeader className="pb-4">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
-                  />
-                  <Badge variant="secondary" className="w-fit mb-2">
-                    {post.category}
-                  </Badge>
-                  <CardTitle className="text-xl font-bold text-gray-800 leading-tight">
-                    {post.title}
-                  </CardTitle>
-                  <p className="text-gray-600 text-sm mt-2">
-                    {post.summary}
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <Clock className="h-3 w-3" />
-                      <span>{post.readTime}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <User className="h-3 w-3" />
-                      <span>{post.author}</span>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    onClick={() => handleReadMore(post)}
-                    className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white"
-                  >
-                    Read More
-                    <ChevronRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+  const handleLike = () => {
+    if (isLiked) {
+      setLikes(likes - 1)
+    } else {
+      setLikes(likes + 1)
+    }
+    setIsLiked(!isLiked)
   }
 
-  // Home View with Featured Article
-  const featuredPost = blogPosts[0];
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: post.excerpt,
+        url: window.location.href,
+      })
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href)
+      alert("Link copied to clipboard!")
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Teen Finance Hub
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Master your money in minutes with quick-read financial tips
-          </p>
-          <Button 
-            onClick={handleViewAllArticles}
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8 py-3 text-lg"
-          >
-            View All Articles
-            <ChevronRight className="h-5 w-5 ml-2" />
-          </Button>
-        </div>
+        <BackButton />
 
-        {/* Featured Article */}
-        <div className="max-w-4xl mx-auto">
-          <Card className="bg-white/80 backdrop-blur-sm shadow-xl border-0">
-            <CardHeader className="pb-6">
-              <img
-                src={featuredPost.image}
-                alt={featuredPost.title}
-                className="w-full h-64 object-cover rounded-lg mb-6"
-              />
-              <Badge variant="secondary" className="w-fit mb-3">
-                {featuredPost.category} • Featured
-              </Badge>
-              <CardTitle className="text-3xl font-bold text-gray-800 leading-tight">
-                {featuredPost.title}
-              </CardTitle>
-              <p className="text-lg text-gray-600 mt-3">
-                {featuredPost.summary}
-              </p>
-              <div className="flex items-center gap-6 text-sm text-gray-500 mt-4">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span>{featuredPost.author}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>{new Date(featuredPost.date).toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span>{featuredPost.readTime}</span>
-                </div>
+        <article className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <img
+              src={post.image || "/placeholder.svg"}
+              alt={post.title}
+              className="w-full h-64 md:h-96 object-cover rounded-lg mb-6"
+            />
+
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
+              <Badge variant="secondary">{post.category}</Badge>
+              <div className="flex items-center">
+                <Calendar className="h-4 w-4 mr-1" />
+                {new Date(post.date).toLocaleDateString()}
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                  Key Takeaways - Learn in 2 Minutes:
-                </h3>
-                <ul className="space-y-3">
-                  {featuredPost.keyPoints.map((point, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mt-0.5 flex-shrink-0">
-                        {index + 1}
-                      </div>
-                      <span className="text-gray-700 font-medium">
-                        {point}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex items-center">
+                <Clock className="h-4 w-4 mr-1" />
+                {post.readTime}
               </div>
-              
-              <div className="flex gap-4">
-                <Button 
-                  onClick={() => handleReadMore(featuredPost)}
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white"
-                >
-                  Read Full Article
-                  <ChevronRight className="h-4 w-4 ml-2" />
-                </Button>
-                <Button 
-                  onClick={handleViewAllArticles}
-                  variant="outline" 
-                  className="flex-1 border-blue-200 hover:bg-blue-50"
-                >
-                  View All Articles
-                </Button>
+              <div className="flex items-center">
+                <User className="h-4 w-4 mr-1" />
+                {post.author}
+              </div>
+            </div>
+
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
+            <p className="text-lg text-muted-foreground mb-6">{post.excerpt}</p>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                {post.tags.map((tag) => (
+                  <Badge key={tag} variant="outline">
+                    {tag}
+                  </Badge>
+                ))}
               </div>
 
-              <div className="mt-6 pt-4 border-t border-gray-200">
-                <div className="flex flex-wrap gap-2">
-                  {featuredPost.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="bg-blue-50">
-                      {tag}
-                    </Badge>
-                  ))}
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLike}
+                  className={isLiked ? "text-red-500 border-red-500" : ""}
+                >
+                  <Heart className={`h-4 w-4 mr-1 ${isLiked ? "fill-current" : ""}`} />
+                  {likes}
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleShare}>
+                  <Share2 className="h-4 w-4 mr-1" />
+                  Share
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="prose prose-lg max-w-none mb-12">
+            <div className="whitespace-pre-wrap">{post.content}</div>
+          </div>
+
+          {/* Author Bio */}
+          <Card className="mb-8">
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-4">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                  <User className="h-8 w-8 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">{post.author}</h3>
+                  <p className="text-muted-foreground">
+                    Financial education expert and teen money mentor. Passionate about helping young people build
+                    healthy financial habits early in life.
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-        </div>
+
+          {/* Related Posts */}
+          {relatedPosts.length > 0 && (
+            <div>
+              <h2 className="text-2xl font-bold mb-6 flex items-center">
+                <BookOpen className="h-6 w-6 mr-2" />
+                Related Articles
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedPosts.map((relatedPost) => (
+                  <Card key={relatedPost.slug} className="hover:shadow-lg transition-shadow">
+                    <CardContent className="p-0">
+                      <img
+                        src={relatedPost.image || "/placeholder.svg"}
+                        alt={relatedPost.title}
+                        className="w-full h-48 object-cover rounded-t-lg"
+                      />
+                      <div className="p-4">
+                        <Badge variant="secondary" className="mb-2">
+                          {relatedPost.category}
+                        </Badge>
+                        <h3 className="font-bold mb-2 line-clamp-2">{relatedPost.title}</h3>
+                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{relatedPost.excerpt}</p>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>{relatedPost.readTime}</span>
+                          <Link href={`/blog/${relatedPost.slug}`}>
+                            <Button variant="link" size="sm" className="p-0 h-auto">
+                              Read More →
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+        </article>
       </div>
     </div>
-  );
+  )
 }
