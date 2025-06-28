@@ -1,304 +1,635 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Calendar, User } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { notFound } from "next/navigation"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Calendar, Clock, User, Share2 } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 
-// Sample blog posts data
-const blogPosts = {
-  "building-credit-early": {
-    title: "5 Ways Teens Can Start Building Credit Early",
-    date: "May 15, 2024",
-    author: "Jasmitha Madasu",
-    image: "/placeholder.svg?height=400&width=800",
+interface BlogPost {
+  id: string
+  title: string
+  excerpt: string
+  content: string
+  author: string
+  date: string
+  readTime: string
+  category: string
+  tags: string[]
+  image: string
+}
+
+const blogPosts: Record<string, BlogPost> = {
+  "teen-budgeting-basics": {
+    id: "teen-budgeting-basics",
+    title: "Teen Budgeting Basics: Your First Step to Financial Freedom",
     excerpt:
-      "Building good credit habits early can set you up for financial success. Here are five ways teens can start building credit responsibly.",
+      "Learn the fundamental principles of budgeting as a teenager and start building healthy money habits early.",
     content: `
-      <h2>Why Building Credit Early Matters</h2>
-      <p>Starting to build credit as a teenager gives you a significant advantage in your financial future. Good credit opens doors to better interest rates on loans, easier apartment rentals, and even better job opportunities in some fields.</p>
-      
-      <h2>1. Become an Authorized User</h2>
-      <p>Ask a parent or guardian with good credit to add you as an authorized user on their credit card. This allows you to benefit from their positive payment history and helps establish your credit profile.</p>
-      
-      <h2>2. Open a Student Credit Card</h2>
-      <p>Many banks offer credit cards specifically designed for students with no credit history. These cards typically have lower credit limits and may require a co-signer, but they're an excellent way to start building credit independently.</p>
-      
-      <h2>3. Consider a Secured Credit Card</h2>
-      <p>If you can't qualify for a traditional credit card, a secured card requires a cash deposit that serves as your credit limit. It's a safe way to build credit with minimal risk.</p>
-      
-      <h2>4. Pay Bills on Time</h2>
-      <p>Payment history is the most important factor in your credit score. Set up automatic payments or reminders to ensure you never miss a due date.</p>
-      
-      <h2>5. Keep Credit Utilization Low</h2>
-      <p>Try to use less than 30% of your available credit limit. For example, if your limit is $500, try to keep your balance below $150.</p>
-      
-      <h2>Monitor Your Progress</h2>
-      <p>Use free credit monitoring services to track your credit score and report. Many banks and credit card companies offer this service to their customers.</p>
+# Teen Budgeting Basics: Your First Step to Financial Freedom
+
+Starting your financial journey as a teenager might seem overwhelming, but it's actually the perfect time to build healthy money habits that will serve you for life. Let's break down the basics of budgeting in a way that's practical and achievable for teens.
+
+## Why Budget as a Teen?
+
+Budgeting isn't just about restricting your spending – it's about taking control of your money and making intentional decisions about how you use it. When you budget as a teen, you:
+
+- Learn valuable life skills early
+- Develop discipline and self-control
+- Reduce financial stress
+- Work toward your goals more effectively
+- Prepare for adult financial responsibilities
+
+## The 50/30/20 Rule for Teens
+
+A simple budgeting framework that works well for teenagers is the modified 50/30/20 rule:
+
+- **50% for Needs**: Essential expenses like school supplies, transportation, or contributions to family expenses
+- **30% for Wants**: Entertainment, eating out with friends, hobbies, and fun purchases
+- **20% for Savings**: Building your emergency fund and saving for bigger goals
+
+## Getting Started: Your First Budget
+
+### Step 1: Track Your Income
+List all sources of money coming in:
+- Part-time job wages
+- Allowance from parents
+- Money from chores
+- Birthday or holiday gifts
+- Side hustles (babysitting, lawn care, etc.)
+
+### Step 2: List Your Expenses
+Write down everything you spend money on:
+- Fixed expenses (phone bill, transportation)
+- Variable expenses (food, entertainment, clothes)
+- Savings goals
+
+### Step 3: Choose Your Budgeting Method
+- **Envelope Method**: Use cash for different spending categories
+- **Digital Apps**: Use budgeting apps designed for teens
+- **Spreadsheet**: Create a simple Excel or Google Sheets budget
+- **Notebook**: Keep a written record of income and expenses
+
+## Common Teen Budgeting Mistakes to Avoid
+
+1. **Being Too Restrictive**: Don't cut out all fun – you'll likely give up on budgeting entirely
+2. **Forgetting Small Purchases**: Those $5 coffee runs add up quickly
+3. **Not Planning for Irregular Expenses**: Save for things like prom, school trips, or gifts
+4. **Comparing Yourself to Others**: Focus on your own financial goals, not what your friends are spending
+
+## Building Your Emergency Fund
+
+Even as a teen, having an emergency fund is important. Start small – even $100 can help with unexpected expenses like:
+- Phone repairs
+- Emergency transportation
+- Last-minute school supplies
+- Medical expenses
+
+## Setting Financial Goals
+
+Make your money goals specific and achievable:
+- **Short-term** (1-3 months): New video game, concert tickets
+- **Medium-term** (3-12 months): New laptop, car savings
+- **Long-term** (1+ years): College fund, first apartment deposit
+
+## Tips for Sticking to Your Budget
+
+1. **Review Weekly**: Check in with your budget every week
+2. **Adjust as Needed**: Your budget should evolve with your life
+3. **Celebrate Wins**: Acknowledge when you meet your savings goals
+4. **Learn from Mistakes**: If you overspend, figure out why and adjust
+5. **Get Support**: Talk to family or friends about your financial goals
+
+## The Power of Starting Early
+
+The habits you build now will compound over time. A teenager who learns to budget and save has a huge advantage over someone who starts these habits in their 20s or 30s. You're not just managing money – you're building the foundation for a financially secure future.
+
+Remember, budgeting is a skill that improves with practice. Don't expect to be perfect right away. The important thing is to start, learn from your experiences, and keep improving your financial habits over time.
+
+Your future self will thank you for starting this journey now!
     `,
+    author: "Sarah Johnson",
+    date: "2024-01-15",
+    readTime: "8 min read",
+    category: "Budgeting",
+    tags: ["budgeting", "teens", "financial literacy", "money management"],
+    image: "/placeholder.svg?height=400&width=600",
   },
-  "first-job-teen": {
-    title: "How to Find Your First Job as a Teen",
-    date: "May 10, 2024",
-    author: "Jasmitha Madasu",
-    image: "/placeholder.svg?height=400&width=800",
+  "first-job-money-tips": {
+    id: "first-job-money-tips",
+    title: "Got Your First Job? Here's How to Handle Your Money Like a Pro",
     excerpt:
-      "Looking for your first job can be intimidating. Here's a step-by-step guide to finding and landing your first job as a teenager.",
+      "Congratulations on your first job! Learn how to make the most of your new income with these essential money management tips.",
     content: `
-      <h2>Getting Started</h2>
-      <p>Finding your first job is an exciting milestone that teaches valuable life skills and provides financial independence. Here's how to approach your job search strategically.</p>
-      
-      <h2>1. Identify Your Skills and Interests</h2>
-      <p>Make a list of your strengths, hobbies, and interests. Are you good with kids? Consider babysitting or tutoring. Love animals? Look into pet-sitting or dog walking services.</p>
-      
-      <h2>2. Know the Legal Requirements</h2>
-      <p>Understand the labor laws in your state. Most states allow 14-15 year olds to work limited hours in certain jobs, while 16-17 year olds have more opportunities.</p>
-      
-      <h2>3. Create a Simple Resume</h2>
-      <p>Even without work experience, you can highlight your education, volunteer work, extracurricular activities, and relevant skills.</p>
-      
-      <h2>4. Start Your Search</h2>
-      <p>Look for teen-friendly employers like:</p>
-      <ul>
-        <li>Restaurants and fast food chains</li>
-        <li>Retail stores</li>
-        <li>Movie theaters</li>
-        <li>Grocery stores</li>
-        <li>Recreation centers</li>
-      </ul>
-      
-      <h2>5. Prepare for Interviews</h2>
-      <p>Practice common interview questions, dress appropriately, and arrive early. Show enthusiasm and willingness to learn.</p>
-      
-      <h2>6. Follow Up</h2>
-      <p>After applying or interviewing, follow up with a thank-you note or call to show your continued interest.</p>
+# Got Your First Job? Here's How to Handle Your Money Like a Pro
+
+Landing your first job is exciting! You're probably thinking about all the things you can finally buy with your own money. But before you start spending, let's talk about how to handle your new income like a financial pro.
+
+## The First Paycheck Feeling
+
+That first paycheck hits different, doesn't it? You worked for this money, and it feels amazing to have earned it yourself. But here's the thing – how you handle this first taste of financial independence will set the tone for your entire financial future.
+
+## The Golden Rules of First-Job Money Management
+
+### Rule #1: Pay Yourself First
+Before you spend a single dollar, set aside money for savings. Even if it's just $20 from your first paycheck, make saving a non-negotiable habit from day one.
+
+### Rule #2: Don't Lifestyle Inflate Too Quickly
+Just because you have money doesn't mean you need to upgrade everything immediately. Resist the urge to suddenly buy expensive clothes, gadgets, or start eating out constantly.
+
+### Rule #3: Track Every Dollar
+When money is new to you, it's easy to lose track of where it goes. Use an app, spreadsheet, or notebook to monitor your spending.
+
+## Smart Moves for Your First Job Income
+
+### Open the Right Bank Accounts
+- **Checking Account**: For daily expenses and bills
+- **Savings Account**: For your emergency fund and goals
+- **Consider a High-Yield Savings Account**: Earn more interest on your savings
+
+### Set Up Automatic Transfers
+Make saving effortless by automatically transferring a portion of each paycheck to savings. Start with 10-20% if possible.
+
+### Understand Your Paycheck
+Learn about:
+- Gross pay vs. net pay
+- Tax deductions
+- Social Security and Medicare contributions
+- Any benefits deductions
+
+## Creating Your First Real Budget
+
+Now that you have regular income, it's time for a more sophisticated budget:
+
+### The Teen Worker's Budget Framework:
+- **40% for Current Expenses**: Transportation, food, entertainment
+- **30% for Savings Goals**: Emergency fund, big purchases, college
+- **20% for Long-term Savings**: Future goals, investments
+- **10% for Fun Money**: Guilt-free spending on whatever you want
+
+## Avoiding Common First-Job Money Mistakes
+
+### Mistake #1: Spending Your Entire First Paycheck
+It's tempting, but don't do it. Save at least something from every paycheck.
+
+### Mistake #2: Not Planning for Taxes
+If you're working as an independent contractor or your employer doesn't withhold taxes, set aside 20-25% for tax time.
+
+### Mistake #3: Ignoring Work Benefits
+Even part-time jobs sometimes offer benefits. Understand what's available to you.
+
+### Mistake #4: Not Tracking Work Expenses
+Keep receipts for work-related expenses – they might be tax-deductible.
+
+## Building Your Professional Financial Habits
+
+### Start an Emergency Fund
+Aim for $500-1000 initially. This will cover:
+- Car repairs
+- Medical expenses
+- Job loss buffer
+- Unexpected opportunities
+
+### Learn About Investing
+You don't need to start investing immediately, but learn the basics:
+- What is compound interest?
+- Different types of investment accounts
+- Risk vs. reward concepts
+
+### Build Credit Responsibly
+Consider becoming an authorized user on a parent's credit card or getting a secured credit card to start building credit history.
+
+## Setting Financial Goals with Real Income
+
+Now that you have steady income, you can set more ambitious goals:
+
+### Short-term Goals (1-6 months):
+- Build a $500 emergency fund
+- Save for a specific purchase
+- Pay for your own phone bill
+
+### Medium-term Goals (6 months - 2 years):
+- Save for a car
+- Build college fund
+- Plan a trip with friends
+
+### Long-term Goals (2+ years):
+- College expenses
+- First apartment
+- Investment account
+
+## The Psychology of Earned Money
+
+Money you earn feels different from money you're given. You worked for it, so you might feel more attached to it. This can be both good and bad:
+
+**Good**: You'll likely be more thoughtful about spending
+**Bad**: You might feel entitled to spend it all since you "earned it"
+
+Remember: earning money is just the first step. Managing it well is what builds wealth.
+
+## Talking Money with Family
+
+Your first job might change family financial dynamics:
+- Discuss expectations about contributing to household expenses
+- Talk about your financial goals
+- Ask for guidance on money management
+- Be open about your income and expenses
+
+## Planning for the Future
+
+Even with your first job, start thinking long-term:
+- How will you pay for college?
+- What career path interests you?
+- What financial skills do you need to develop?
+- How can you increase your earning potential?
+
+## The Bottom Line
+
+Your first job is more than just a way to make money – it's your first step into financial adulthood. The habits you build now will serve you for decades to come.
+
+Be proud of your hard work, but be smart with your money. Save consistently, spend thoughtfully, and always keep learning about personal finance.
+
+Your future financially successful self is counting on the decisions you make today!
     `,
+    author: "Mike Chen",
+    date: "2024-01-10",
+    readTime: "10 min read",
+    category: "Career",
+    tags: ["first job", "income", "career", "money management"],
+    image: "/placeholder.svg?height=400&width=600",
   },
-  "compound-interest-power": {
-    title: "The Power of Compound Interest",
-    date: "May 5, 2024",
-    author: "Jasmitha Madasu",
-    image: "/placeholder.svg?height=400&width=800",
-    excerpt: "Understanding compound interest is like discovering a superpower for your money.",
+  "saving-for-college": {
+    id: "saving-for-college",
+    title: "Saving for College: A Teen's Complete Guide",
+    excerpt:
+      "College is expensive, but with the right strategy, you can reduce the financial burden. Here's how to start saving smart.",
     content: `
-      <h2>What is Compound Interest?</h2>
-      <p>Compound interest is when you earn interest not just on your original investment, but also on the interest you've already earned. It's like a snowball effect for your money.</p>
-      
-      <h2>The Magic Formula</h2>
-      <p>The compound interest formula is: A = P(1 + r/n)^(nt)</p>
-      <p>Where:</p>
-      <ul>
-        <li>A = final amount</li>
-        <li>P = principal (initial amount)</li>
-        <li>r = annual interest rate</li>
-        <li>n = number of times interest compounds per year</li>
-        <li>t = time in years</li>
-      </ul>
-      
-      <h2>Real-World Example</h2>
-      <p>If you invest $1,000 at 7% annual interest compounded annually:</p>
-      <ul>
-        <li>After 10 years: $1,967</li>
-        <li>After 20 years: $3,870</li>
-        <li>After 30 years: $7,612</li>
-      </ul>
-      
-      <h2>Start Early, Win Big</h2>
-      <p>The earlier you start investing, the more time compound interest has to work its magic. Even small amounts invested early can grow into substantial sums over time.</p>
-      
-      <h2>Where to Find Compound Interest</h2>
-      <ul>
-        <li>High-yield savings accounts</li>
-        <li>Certificates of deposit (CDs)</li>
-        <li>Stock market investments</li>
-        <li>Retirement accounts (401k, IRA)</li>
-      </ul>
+# Saving for College: A Teen's Complete Guide
+
+College costs can seem overwhelming, but here's some good news: every dollar you save now is a dollar you won't have to borrow later. Let's break down how to approach college savings as a teenager.
+
+## Understanding College Costs
+
+Before you start saving, understand what you're saving for:
+
+### Tuition and Fees
+- Public in-state: ~$10,000-15,000/year
+- Public out-of-state: ~$25,000-35,000/year
+- Private colleges: ~$35,000-50,000+/year
+
+### Room and Board
+- On-campus housing: ~$10,000-15,000/year
+- Off-campus: Varies by location
+
+### Other Expenses
+- Books and supplies: ~$1,200/year
+- Transportation: ~$1,000/year
+- Personal expenses: ~$2,000/year
+
+## The Power of Starting Early
+
+Let's say you want to save $20,000 for college:
+- Starting at 14: Save ~$278/month for 4 years
+- Starting at 16: Save ~$417/month for 4 years
+- Starting at 17: Save ~$833/month for 2 years
+
+The earlier you start, the less you need to save each month!
+
+## College Savings Strategies for Teens
+
+### Strategy 1: The 529 Education Savings Plan
+- Tax-advantaged savings specifically for education
+- Parents usually open these, but you can contribute
+- Money grows tax-free when used for qualified education expenses
+
+### Strategy 2: High-Yield Savings Account
+- Safe and accessible
+- Earns more interest than regular savings
+- Good for short-term college savings
+
+### Strategy 3: Custodial Investment Account
+- Potential for higher returns
+- More risk than savings accounts
+- Good for longer-term savings (3+ years until college)
+
+## How Much Should You Save?
+
+### The 1/3 Rule
+Plan to cover college costs through:
+- 1/3 savings (yours and parents')
+- 1/3 financial aid/scholarships
+- 1/3 current income (part-time work during college)
+
+### Your Personal Savings Goal
+Aim to save at least:
+- $5,000-10,000 for community college
+- $15,000-25,000 for in-state public university
+- $30,000+ for private or out-of-state schools
+
+## Creative Ways to Boost College Savings
+
+### Maximize Gift Money
+Ask relatives to contribute to your college fund instead of giving traditional gifts for birthdays and holidays.
+
+### Side Hustles for College
+- Tutoring younger students
+- Pet sitting/dog walking
+- Selling crafts or services online
+- Seasonal work (summer jobs, holiday retail)
+
+### Scholarship Hunting
+Start early! Many scholarships are available for high school students:
+- Academic scholarships
+- Athletic scholarships
+- Community service awards
+- Essay contests
+- Unique talent scholarships
+
+## The College Savings Timeline
+
+### Freshman Year (Age 14-15)
+- Open a dedicated college savings account
+- Start with small, consistent contributions
+- Learn about different college options and costs
+
+### Sophomore Year (Age 15-16)
+- Increase savings as you get older
+- Start researching scholarships
+- Consider getting a part-time job
+
+### Junior Year (Age 16-17)
+- Ramp up savings efforts
+- Apply for early scholarships
+- Start visiting colleges to understand real costs
+
+### Senior Year (Age 17-18)
+- Apply for financial aid (FAFSA)
+- Apply for scholarships aggressively
+- Make final college savings push
+
+## Reducing College Costs
+
+Saving money is just one part of the equation. You can also reduce costs:
+
+### Academic Strategies
+- Take AP classes for college credit
+- Consider dual enrollment at community college
+- Graduate early if possible
+
+### School Choice Strategies
+- Start at community college, then transfer
+- Choose in-state public universities
+- Look for schools with good financial aid
+
+### Living Strategies
+- Live at home if possible
+- Choose less expensive housing options
+- Cook your own meals instead of meal plans
+
+## Balancing College Savings with Other Goals
+
+You don't have to save every penny for college. It's important to:
+- Keep some money for current enjoyment
+- Save for other goals (car, emergency fund)
+- Maintain a balanced approach to money
+
+## What If You Can't Save Enough?
+
+Don't panic! Many successful people graduated with student loans. The key is:
+- Borrow only what you need
+- Understand loan terms and interest rates
+- Choose a degree with good earning potential
+- Have a plan to pay back loans quickly
+
+## Getting Family Involved
+
+### Talk to Your Parents
+- Discuss college savings goals together
+- Understand what they can contribute
+- Make a family college savings plan
+
+### Grandparents and Relatives
+- Many grandparents want to help with education costs
+- They can contribute directly to 529 plans
+- Ask for education contributions instead of other gifts
+
+## College Savings Mistakes to Avoid
+
+1. **Waiting too long to start**: Time is your biggest advantage
+2. **Not researching costs**: Understand what you're saving for
+3. **Ignoring scholarships**: Free money is the best money
+4. **Putting all money in low-yield accounts**: Consider growth options
+5. **Not involving family**: College savings can be a team effort
+
+## Alternative Paths to Consider
+
+College isn't the only path to success:
+- Trade schools and vocational training
+- Community college certificates
+- Entrepreneurship
+- Military service with education benefits
+
+## The Bottom Line
+
+Saving for college as a teen puts you ahead of the game. Every dollar you save now reduces future debt and stress. Start small, be consistent, and remember that college is an investment in your future.
+
+The goal isn't to save every penny for college – it's to reduce the financial burden so you can focus on learning and building your career.
+
+Your future college graduate self will thank you for starting this journey now!
     `,
-  },
-  "saving-vs-investing": {
-    title: "Saving vs. Investing: What's the Difference?",
-    date: "April 28, 2024",
-    author: "Jasmitha Madasu",
-    image: "/placeholder.svg?height=400&width=800",
-    excerpt: "Learn when to save and when to invest your money for maximum growth.",
-    content: `
-      <h2>Understanding the Basics</h2>
-      <p>Saving and investing are both important for financial health, but they serve different purposes and have different risk levels.</p>
-      
-      <h2>Saving: Safety First</h2>
-      <p>Saving means putting money aside in safe, easily accessible accounts like:</p>
-      <ul>
-        <li>Savings accounts</li>
-        <li>Money market accounts</li>
-        <li>Certificates of deposit (CDs)</li>
-      </ul>
-      
-      <h3>When to Save:</h3>
-      <ul>
-        <li>Emergency fund (3-6 months of expenses)</li>
-        <li>Short-term goals (vacation, car, etc.)</li>
-        <li>Money you'll need within 2-3 years</li>
-      </ul>
-      
-      <h2>Investing: Growth Potential</h2>
-      <p>Investing involves putting money into assets that have the potential to grow over time:</p>
-      <ul>
-        <li>Stocks</li>
-        <li>Bonds</li>
-        <li>Mutual funds</li>
-        <li>ETFs</li>
-        <li>Real estate</li>
-      </ul>
-      
-      <h3>When to Invest:</h3>
-      <ul>
-        <li>Long-term goals (retirement, college)</li>
-        <li>Money you won't need for 5+ years</li>
-        <li>After you have an emergency fund</li>
-      </ul>
-      
-      <h2>Risk vs. Reward</h2>
-      <p>Savings are safe but offer low returns. Investments can provide higher returns but come with the risk of losing money.</p>
-      
-      <h2>The 50/30/20 Rule</h2>
-      <p>A good starting point:</p>
-      <ul>
-        <li>50% for needs</li>
-        <li>30% for wants</li>
-        <li>20% for savings and investments</li>
-      </ul>
-    `,
-  },
-  "talk-parents-money": {
-    title: "How to Talk to Your Parents About Money",
-    date: "April 20, 2024",
-    author: "Jasmitha Madasu",
-    image: "/placeholder.svg?height=400&width=800",
-    excerpt: "Tips for having productive conversations with your parents about finances.",
-    content: `
-      <h2>Breaking the Ice</h2>
-      <p>Money conversations can feel awkward, but they're essential for your financial education. Here's how to approach these important discussions.</p>
-      
-      <h2>1. Choose the Right Time</h2>
-      <p>Pick a relaxed moment when your parents aren't stressed or busy. Maybe during a car ride or after dinner when everyone is comfortable.</p>
-      
-      <h2>2. Start with Questions</h2>
-      <p>Show genuine interest in learning:</p>
-      <ul>
-        <li>"How did you learn about money management?"</li>
-        <li>"What financial mistakes did you make when you were young?"</li>
-        <li>"How do you decide what to spend money on?"</li>
-      </ul>
-      
-      <h2>3. Share Your Goals</h2>
-      <p>Tell them about your financial goals and ask for advice. This shows maturity and opens the door for deeper conversations.</p>
-      
-      <h2>4. Ask About Family Finances</h2>
-      <p>While respecting privacy, you can ask general questions about:</p>
-      <ul>
-        <li>How the family budget works</li>
-        <li>Why certain financial decisions are made</li>
-        <li>How to prepare for college expenses</li>
-      </ul>
-      
-      <h2>5. Request Financial Education</h2>
-      <p>Ask if they can teach you about:</p>
-      <ul>
-        <li>Banking and checking accounts</li>
-        <li>Credit cards and credit scores</li>
-        <li>Investing basics</li>
-        <li>Tax preparation</li>
-      </ul>
-      
-      <h2>6. Suggest Family Financial Activities</h2>
-      <ul>
-        <li>Review the family budget together</li>
-        <li>Compare prices while shopping</li>
-        <li>Discuss major purchases</li>
-        <li>Plan for family financial goals</li>
-      </ul>
-      
-      <h2>Making it Ongoing</h2>
-      <p>Financial education isn't a one-time conversation. Make it a regular part of your family discussions to build your money knowledge over time.</p>
-    `,
+    author: "Dr. Lisa Rodriguez",
+    date: "2024-01-05",
+    readTime: "12 min read",
+    category: "Education",
+    tags: ["college", "education", "savings", "financial planning"],
+    image: "/placeholder.svg?height=400&width=600",
   },
 }
 
-interface BlogPostPageProps {
-  params: {
-    slug: string
-  }
-}
+const relatedPosts = [
+  {
+    id: "building-credit-as-teen",
+    title: "Building Credit as a Teen: What You Need to Know",
+    excerpt: "Learn the basics of credit and how to start building a positive credit history early.",
+    category: "Credit",
+    readTime: "6 min read",
+  },
+  {
+    id: "teen-investment-basics",
+    title: "Teen Investment Basics: Growing Your Money",
+    excerpt: "Introduction to investing concepts and options for teenagers.",
+    category: "Investing",
+    readTime: "9 min read",
+  },
+  {
+    id: "money-mindset-for-teens",
+    title: "Developing a Healthy Money Mindset",
+    excerpt: "How your thoughts about money shape your financial future.",
+    category: "Psychology",
+    readTime: "7 min read",
+  },
+]
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = blogPosts[params.slug as keyof typeof blogPosts]
+export default function BlogPostPage({ params }: { params: { slug: string } }) {
+  const [post, setPost] = useState<BlogPost | null>(null)
+
+  useEffect(() => {
+    const foundPost = blogPosts[params.slug]
+    setPost(foundPost || null)
+  }, [params.slug])
 
   if (!post) {
-    notFound()
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Post Not Found</h1>
+          <p className="text-muted-foreground mb-6">The blog post you're looking for doesn't exist.</p>
+          <Link href="/blog">
+            <Button>Back to Blog</Button>
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="container mx-auto py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <Link href="/blog">
-          <Button variant="ghost" className="mb-6">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Blog
-          </Button>
-        </Link>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="container mx-auto px-4 py-8">
+        <BackButton />
 
-        <article className="prose prose-lg max-w-none">
-          <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden">
-            <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
-          </div>
+        <article className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
+            <div className="mb-6">
+              <Badge variant="secondary" className="mb-4">
+                {post.category}
+              </Badge>
+              <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.title}</h1>
+              <p className="text-lg text-muted-foreground mb-6">{post.excerpt}</p>
 
-          <header className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-            <div className="flex items-center gap-4 text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <span>{post.date}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <User className="h-4 w-4" />
-                <span>{post.author}</span>
+              <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span>{post.author}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  <span>{new Date(post.date).toLocaleDateString()}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  <span>{post.readTime}</span>
+                </div>
               </div>
             </div>
-          </header>
 
-          <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
-        </article>
+            <img
+              src={post.image || "/placeholder.svg"}
+              alt={post.title}
+              className="w-full h-64 object-cover rounded-lg"
+            />
+          </div>
 
-        <div className="mt-12 pt-8 border-t">
-          <h3 className="text-xl font-bold mb-4">Related Articles</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Object.entries(blogPosts)
-              .filter(([slug]) => slug !== params.slug)
-              .slice(0, 2)
-              .map(([slug, relatedPost]) => (
-                <Card key={slug} className="overflow-hidden">
-                  <div className="relative w-full aspect-video">
-                    <Image
-                      src={relatedPost.image || "/placeholder.svg"}
-                      alt={relatedPost.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="text-sm text-muted-foreground mb-2">{relatedPost.date}</div>
-                    <h4 className="font-bold mb-2">{relatedPost.title}</h4>
-                    <p className="text-muted-foreground text-sm mb-3">{relatedPost.excerpt}</p>
-                    <Link href={`/blog/${slug}`}>
-                      <Button variant="outline" size="sm">
-                        Read More
-                      </Button>
-                    </Link>
+          {/* Content */}
+          <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
+            <div className="prose prose-lg max-w-none">
+              {post.content.split("\n").map((paragraph, index) => {
+                if (paragraph.startsWith("# ")) {
+                  return (
+                    <h1 key={index} className="text-3xl font-bold mt-8 mb-4">
+                      {paragraph.slice(2)}
+                    </h1>
+                  )
+                } else if (paragraph.startsWith("## ")) {
+                  return (
+                    <h2 key={index} className="text-2xl font-bold mt-6 mb-3">
+                      {paragraph.slice(3)}
+                    </h2>
+                  )
+                } else if (paragraph.startsWith("### ")) {
+                  return (
+                    <h3 key={index} className="text-xl font-bold mt-4 mb-2">
+                      {paragraph.slice(4)}
+                    </h3>
+                  )
+                } else if (paragraph.startsWith("- ")) {
+                  return (
+                    <li key={index} className="ml-4">
+                      {paragraph.slice(2)}
+                    </li>
+                  )
+                } else if (paragraph.trim() === "") {
+                  return <br key={index} />
+                } else if (paragraph.startsWith("**") && paragraph.endsWith("**")) {
+                  return (
+                    <p key={index} className="font-bold mb-2">
+                      {paragraph.slice(2, -2)}
+                    </p>
+                  )
+                } else {
+                  return (
+                    <p key={index} className="mb-4">
+                      {paragraph}
+                    </p>
+                  )
+                }
+              })}
+            </div>
+
+            {/* Tags */}
+            <div className="mt-8 pt-6 border-t">
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <Badge key={tag} variant="outline">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            {/* Share */}
+            <div className="mt-6 flex items-center gap-4">
+              <span className="text-sm font-medium">Share this article:</span>
+              <Button variant="outline" size="sm">
+                <Share2 className="h-4 w-4 mr-2" />
+                Share
+              </Button>
+            </div>
+          </div>
+
+          {/* Related Posts */}
+          <div className="bg-white rounded-lg shadow-sm p-8">
+            <h2 className="text-2xl font-bold mb-6">Related Articles</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedPosts.map((relatedPost) => (
+                <Card key={relatedPost.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <Badge variant="secondary" className="w-fit mb-2">
+                      {relatedPost.category}
+                    </Badge>
+                    <CardTitle className="text-lg">{relatedPost.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground text-sm mb-4">{relatedPost.excerpt}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {relatedPost.readTime}
+                      </span>
+                      <Link href={`/blog/${relatedPost.id}`}>
+                        <Button variant="ghost" size="sm">
+                          Read More
+                        </Button>
+                      </Link>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
+            </div>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   )
