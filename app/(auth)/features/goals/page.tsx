@@ -45,7 +45,7 @@ export default function GoalsFeaturePage() {
           </div>
           <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg p-8 flex items-center justify-center">
             <img
-              src="/placeholder.svg?height=300&width=400"
+              src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop&crop=center"
               alt="Goal tracking interface showing a skateboard savings quest"
               className="rounded-lg shadow-lg"
             />

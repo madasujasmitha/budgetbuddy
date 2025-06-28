@@ -37,7 +37,7 @@ export default function HowItWorksPage() {
             </div>
             <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg p-6 flex items-center justify-center">
               <img
-                src="/placeholder.svg?height=250&width=350"
+                src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80"
                 alt="Character creation screen with avatar selection"
                 className="rounded-lg shadow-md"
               />
@@ -47,7 +47,7 @@ export default function HowItWorksPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1 bg-gradient-to-br from-secondary/10 to-primary/10 rounded-lg p-6 flex items-center justify-center">
               <img
-                src="/placeholder.svg?height=250&width=350"
+                src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
                 alt="Goal setting interface with progress tracking"
                 className="rounded-lg shadow-md"
               />
@@ -83,7 +83,7 @@ export default function HowItWorksPage() {
             </div>
             <div className="bg-gradient-to-br from-accent/10 to-secondary/10 rounded-lg p-6 flex items-center justify-center">
               <img
-                src="/placeholder.svg?height=250&width=350"
+                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
                 alt="Transaction tracking dashboard with XP rewards"
                 className="rounded-lg shadow-md"
               />
@@ -93,7 +93,7 @@ export default function HowItWorksPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg p-6 flex items-center justify-center">
               <img
-                src="/placeholder.svg?height=250&width=350"
+                src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
                 alt="Achievement gallery with badges and rewards"
                 className="rounded-lg shadow-md"
               />

@@ -24,7 +24,7 @@ export default function JobsFeaturePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-16">
           <div className="bg-gradient-to-br from-secondary/10 to-primary/10 rounded-lg p-8 flex items-center justify-center">
             <img
-              src="/placeholder.svg?height=300&width=400"
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&crop=center"
               alt="Teen-friendly job board showing various opportunities"
               className="rounded-lg shadow-lg"
             />

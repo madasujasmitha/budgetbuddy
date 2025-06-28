@@ -36,18 +36,18 @@ export default function AboutPage() {
                 </p>
                 
                 <p className="text-muted-foreground mb-4">
-                  BudgetBuddy came out of everything I learned during that time. It's built to make personal finance actually make sense for teens — and even make it fun. No lectures. No boring spreadsheets. Just real tools that help you build good money habits from the start.
+                  BudgetBuddy came out of everything I learned during that time. It's built to make personal finance actually make sense for teens, and even make it fun. No lectures. No boring spreadsheets. Just real tools that help you build good money habits from the start.
                 </p>
                 
                 <p className="text-muted-foreground">
-                  By combining game mechanics with solid financial principles, we created a platform that makes managing money feel like an adventure rather than a chore.
+                  By combining game mechanics with solid financial principles, I created a platform that makes managing money feel like an adventure rather than a chore.
                 </p>
               </div>
               
               <div className="flex justify-center">
                 <div className="w-80 h-80 relative">
                   <img 
-                    src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=400&h=400&fit=crop&crop=center"
+                    src="https://media.licdn.com/dms/image/v2/D4E03AQH-T6HqNkGjbA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1732071513712?e=1756339200&v=beta&t=WwttFbPfE3DIQ7cwYnp8EbRfaK3HAoSvooX6WVJ4HOw"
                     alt="Financial education and mentoring"
                     className="w-full h-full object-cover rounded-lg shadow-lg"
                   />

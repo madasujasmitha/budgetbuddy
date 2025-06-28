@@ -27,7 +27,11 @@ export default function JournalFeaturePage() {
         <div className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="bg-muted rounded-lg p-6 aspect-video flex items-center justify-center">
-              <p className="text-muted-foreground">Journal visualization image</p>
+              <img
+                src="https://images.unsplash.com/photo-1493119508027-2b584f234d6c?w=400&h=250&fit=crop&crop=center"
+                alt="Journal visualization image"
+                className="rounded-lg shadow-lg w-full h-full object-cover"
+              />
             </div>
             <div>
               <h2 className="text-2xl font-bold mb-4">Understand Your Money Emotions</h2>
