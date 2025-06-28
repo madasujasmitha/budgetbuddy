@@ -27,7 +27,7 @@ export default function BlogPage() {
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=300&fit=crop&crop=center"
+                  src="/placeholder.svg?height=300&width=500"
                   alt="Teens building credit"
                   fill
                   className="object-cover rounded-t-lg"
@@ -40,17 +40,19 @@ export default function BlogPage() {
                   Building good credit habits early can set you up for financial success. Here are five ways teens can
                   start building credit responsibly.
                 </p>
-                <Button variant="outline" size="sm">
-                  Read More
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
+                <Link href="/blog/building-credit-early">
+                  <Button variant="outline" size="sm">
+                    Read More
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&crop=center"
+                  src="/placeholder.svg?height=300&width=500"
                   alt="Teen job search tips"
                   fill
                   className="object-cover rounded-t-lg"
@@ -63,10 +65,12 @@ export default function BlogPage() {
                   Looking for your first job can be intimidating. Here's a step-by-step guide to finding and landing
                   your first job as a teenager.
                 </p>
-                <Button variant="outline" size="sm">
-                  Read More
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
+                <Link href="/blog/first-job-teen">
+                  <Button variant="outline" size="sm">
+                    Read More
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
@@ -75,7 +79,7 @@ export default function BlogPage() {
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=300&h=200&fit=crop&crop=center"
+                  src="/placeholder.svg?height=200&width=300"
                   alt="Compound interest visualization"
                   fill
                   className="object-cover rounded-t-lg"
@@ -87,17 +91,19 @@ export default function BlogPage() {
                 <p className="text-muted-foreground text-sm mb-3">
                   Understanding compound interest is like discovering a superpower for your money.
                 </p>
-                <Button variant="ghost" size="sm" className="px-0">
-                  Read More
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
+                <Link href="/blog/compound-interest-power">
+                  <Button variant="ghost" size="sm" className="px-0">
+                    Read More
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="https://images.unsplash.com/photo-1559526324-593bc073d938?w=300&h=200&fit=crop&crop=center"
+                  src="/placeholder.svg?height=200&width=300"
                   alt="Saving vs investing guide"
                   fill
                   className="object-cover rounded-t-lg"
@@ -109,17 +115,19 @@ export default function BlogPage() {
                 <p className="text-muted-foreground text-sm mb-3">
                   Learn when to save and when to invest your money for maximum growth.
                 </p>
-                <Button variant="ghost" size="sm" className="px-0">
-                  Read More
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
+                <Link href="/blog/saving-vs-investing">
+                  <Button variant="ghost" size="sm" className="px-0">
+                    Read More
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="https://images.unsplash.com/photo-1609220136736-443140cffec6?w=300&h=200&fit=crop&crop=center"
+                  src="/placeholder.svg?height=200&width=300"
                   alt="Family money conversations"
                   fill
                   className="object-cover rounded-t-lg"
@@ -131,19 +139,23 @@ export default function BlogPage() {
                 <p className="text-muted-foreground text-sm mb-3">
                   Tips for having productive conversations with your parents about finances.
                 </p>
-                <Button variant="ghost" size="sm" className="px-0">
-                  Read More
-                  <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
+                <Link href="/blog/talk-parents-money">
+                  <Button variant="ghost" size="sm" className="px-0">
+                    Read More
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
 
           <div className="text-center mt-12">
-            <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white">
-              View All Articles
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
+            <Link href="/blog/all">
+              <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white">
+                View All Articles
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
