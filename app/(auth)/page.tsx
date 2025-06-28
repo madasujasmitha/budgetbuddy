@@ -33,9 +33,9 @@ export default function LandingPage() {
     // Simulate login process
     setTimeout(() => {
       setIsLoading(false)
-      // Simulate successful login
-      localStorage.setItem("budgetbuddy_logged_in", "true")
-      localStorage.setItem(
+      // Simulate successful login - using in-memory storage instead
+      sessionStorage.setItem("budgetbuddy_logged_in", "true")
+      sessionStorage.setItem(
         "budgetbuddy_user",
         JSON.stringify({
           username: "demo_user",
@@ -59,8 +59,8 @@ export default function LandingPage() {
 
   const handleStartAdventure = () => {
     // Simulate successful login and redirect to dashboard
-    localStorage.setItem("budgetbuddy_logged_in", "true")
-    localStorage.setItem(
+    sessionStorage.setItem("budgetbuddy_logged_in", "true")
+    sessionStorage.setItem(
       "budgetbuddy_user",
       JSON.stringify({
         username: "new_adventurer",
@@ -294,7 +294,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="flex flex-col items-center text-center">
                 <img
-                  src="/placeholder.svg?height=300&width=400"
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop&crop=center"
                   alt="Character creation interface showing avatar customization and profile setup"
                   className="w-full h-48 object-cover rounded-lg mb-4"
                 />
@@ -307,7 +307,7 @@ export default function LandingPage() {
 
               <div className="flex flex-col items-center text-center">
                 <img
-                  src="/placeholder.svg?height=300&width=400"
+                  src="https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=400&h=300&fit=crop&crop=center"
                   alt="Goal setting interface with savings targets and quest creation"
                   className="w-full h-48 object-cover rounded-lg mb-4"
                 />
@@ -320,7 +320,7 @@ export default function LandingPage() {
 
               <div className="flex flex-col items-center text-center">
                 <img
-                  src="/placeholder.svg?height=300&width=400"
+                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop&crop=center"
                   alt="Transaction tracking dashboard with XP rewards and level progression"
                   className="w-full h-48 object-cover rounded-lg mb-4"
                 />
@@ -333,7 +333,7 @@ export default function LandingPage() {
 
               <div className="flex flex-col items-center text-center">
                 <img
-                  src="/placeholder.svg?height=300&width=400"
+                  src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=300&fit=crop&crop=center"
                   alt="Achievement gallery showing unlocked badges and completed challenges"
                   className="w-full h-48 object-cover rounded-lg mb-4"
                 />
