@@ -27,7 +27,7 @@ export default function BlogPage() {
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="/placeholder.svg?height=300&width=500"
+                  src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=300&fit=crop&crop=center"
                   alt="Teens building credit"
                   fill
                   className="object-cover rounded-t-lg"
@@ -50,7 +50,7 @@ export default function BlogPage() {
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="/placeholder.svg?height=300&width=500"
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&crop=center"
                   alt="Teen job search tips"
                   fill
                   className="object-cover rounded-t-lg"
@@ -75,7 +75,7 @@ export default function BlogPage() {
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="/placeholder.svg?height=200&width=300"
+                  src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=300&h=200&fit=crop&crop=center"
                   alt="Compound interest visualization"
                   fill
                   className="object-cover rounded-t-lg"
@@ -97,7 +97,7 @@ export default function BlogPage() {
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="/placeholder.svg?height=200&width=300"
+                  src="https://images.unsplash.com/photo-1559526324-593bc073d938?w=300&h=200&fit=crop&crop=center"
                   alt="Saving vs investing guide"
                   fill
                   className="object-cover rounded-t-lg"
@@ -119,7 +119,7 @@ export default function BlogPage() {
             <Card className="overflow-hidden">
               <div className="relative w-full aspect-video">
                 <Image
-                  src="/placeholder.svg?height=200&width=300"
+                  src="https://images.unsplash.com/photo-1609220136736-443140cffec6?w=300&h=200&fit=crop&crop=center"
                   alt="Family money conversations"
                   fill
                   className="object-cover rounded-t-lg"
