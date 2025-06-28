@@ -17,6 +17,17 @@ export default function LandingPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [activeTab, setActiveTab] = useState("login")
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+    remember: false,
+  })
+  const [registerData, setRegisterData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    terms: false,
+  })
 
   // Scroll to features section
   const scrollToFeatures = () => {
@@ -24,6 +35,22 @@ export default function LandingPage() {
     if (featuresSection) {
       featuresSection.scrollIntoView({ behavior: "smooth" })
     }
+  }
+
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target
+    setLoginData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }))
+  }
+
+  const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target
+    setRegisterData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }))
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -36,18 +63,19 @@ export default function LandingPage() {
 
       // For demo purposes, simulate successful login
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("budgetbuddy_logged_in", "true")
-        sessionStorage.setItem(
+        localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem(
           "budgetbuddy_user",
           JSON.stringify({
-            username: "demo_user",
-            email: "demo@budgetbuddy.com",
+            username: loginData.email.split("@")[0] || "demo_user",
+            email: loginData.email,
           }),
         )
       }
       router.push("/dashboard")
     } catch (error) {
       console.error("Login error:", error)
+      alert("Login failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -58,22 +86,43 @@ export default function LandingPage() {
     setIsLoading(true)
 
     try {
+      // Validate form
+      if (!registerData.terms) {
+        alert("Please accept the terms and conditions")
+        setIsLoading(false)
+        return
+      }
+
       // Simulate registration process
       await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // Store user data and redirect to onboarding
+      if (typeof window !== "undefined") {
+        localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem(
+          "budgetbuddy_user",
+          JSON.stringify({
+            username: registerData.username,
+            email: registerData.email,
+          }),
+        )
+      }
       router.push("/onboarding")
     } catch (error) {
       console.error("Registration error:", error)
+      alert("Registration failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleStartAdventure = () => {
+  const handleStartAdventure = async () => {
+    setIsLoading(true)
     try {
       // Simulate successful login and redirect to dashboard
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("budgetbuddy_logged_in", "true")
-        sessionStorage.setItem(
+        localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem(
           "budgetbuddy_user",
           JSON.stringify({
             username: "new_adventurer",
@@ -86,6 +135,8 @@ export default function LandingPage() {
       console.error("Start adventure error:", error)
       // Fallback to onboarding if there's an issue
       router.push("/onboarding")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -167,20 +218,43 @@ export default function LandingPage() {
                 <TabsContent value="login">
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email or Username</Label>
-                      <Input id="email" type="text" placeholder="Enter your email or username" required />
+                      <Label htmlFor="login-email">Email or Username</Label>
+                      <Input
+                        id="login-email"
+                        name="email"
+                        type="text"
+                        placeholder="Enter your email or username"
+                        value={loginData.email}
+                        onChange={handleLoginChange}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="login-password">Password</Label>
                         <Link href="/forgot-password" className="text-xs text-primary hover:underline">
                           Forgot password?
                         </Link>
                       </div>
-                      <Input id="password" type="password" placeholder="Enter your password" required />
+                      <Input
+                        id="login-password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        value={loginData.password}
+                        onChange={handleLoginChange}
+                        required
+                      />
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Checkbox id="remember" />
+                      <Checkbox
+                        id="remember"
+                        name="remember"
+                        checked={loginData.remember}
+                        onCheckedChange={(checked) =>
+                          setLoginData((prev) => ({ ...prev, remember: checked as boolean }))
+                        }
+                      />
                       <Label htmlFor="remember" className="text-sm font-normal">
                         Remember me
                       </Label>
@@ -190,9 +264,13 @@ export default function LandingPage() {
                     </Button>
                     <p className="text-center text-sm text-muted-foreground">
                       Don&apos;t have an account?{" "}
-                      <Link href="/register" className="text-primary hover:underline">
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("register")}
+                        className="text-primary hover:underline"
+                      >
                         Register
-                      </Link>
+                      </button>
                     </p>
                   </form>
                 </TabsContent>
@@ -200,19 +278,51 @@ export default function LandingPage() {
                 <TabsContent value="register">
                   <form onSubmit={handleRegister} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="username">Username</Label>
-                      <Input id="username" type="text" placeholder="Choose a username" required />
+                      <Label htmlFor="register-username">Username</Label>
+                      <Input
+                        id="register-username"
+                        name="username"
+                        type="text"
+                        placeholder="Choose a username"
+                        value={registerData.username}
+                        onChange={handleRegisterChange}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="register-email">Email</Label>
-                      <Input id="register-email" type="email" placeholder="Enter your email" required />
+                      <Input
+                        id="register-email"
+                        name="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={registerData.email}
+                        onChange={handleRegisterChange}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="register-password">Password</Label>
-                      <Input id="register-password" type="password" placeholder="Create a password" required />
+                      <Input
+                        id="register-password"
+                        name="password"
+                        type="password"
+                        placeholder="Create a password"
+                        value={registerData.password}
+                        onChange={handleRegisterChange}
+                        required
+                      />
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Checkbox id="terms" required />
+                      <Checkbox
+                        id="terms"
+                        name="terms"
+                        checked={registerData.terms}
+                        onCheckedChange={(checked) =>
+                          setRegisterData((prev) => ({ ...prev, terms: checked as boolean }))
+                        }
+                        required
+                      />
                       <Label htmlFor="terms" className="text-sm font-normal">
                         I agree to the{" "}
                         <Link href="/terms" className="text-primary hover:underline">
@@ -229,9 +339,13 @@ export default function LandingPage() {
                     </Button>
                     <p className="text-center text-sm text-muted-foreground">
                       Already have an account?{" "}
-                      <Link href="/" className="text-primary hover:underline">
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("login")}
+                        className="text-primary hover:underline"
+                      >
                         Login
-                      </Link>
+                      </button>
                     </p>
                   </form>
                 </TabsContent>

@@ -2,152 +2,129 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter, Calendar, Clock, User, ArrowRight } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import Image from "next/image"
+import { Calendar, Clock, User, Search, Filter, SortAsc, SortDesc } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { BackButton } from "@/components/ui/back-button"
 
-// Sample blog posts data
-const allBlogPosts = [
+const blogPosts = [
   {
+    id: 1,
     slug: "teen-budgeting-basics",
     title: "Teen Budgeting Basics: Your First Step to Financial Freedom",
-    excerpt: "Learn the fundamentals of budgeting as a teenager and start building healthy money habits early.",
+    excerpt:
+      "Learn the fundamental principles of budgeting as a teenager and start building healthy financial habits that will last a lifetime.",
     author: "Sarah Johnson",
     date: "2024-01-15",
-    readTime: "8 min read",
+    readTime: "5 min read",
     category: "Budgeting",
-    tags: ["budgeting", "teens", "money management", "savings"],
-    image: "/placeholder.svg?height=300&width=500",
+    tags: ["budgeting", "teens", "basics", "financial-literacy"],
+    featured: true,
+    image: "/placeholder.svg?height=300&width=400",
+    likes: 127,
   },
   {
-    slug: "summer-job-guide",
-    title: "The Ultimate Summer Job Guide for Teens",
-    excerpt: "Discover the best summer job opportunities for teenagers and learn how to land your first job.",
+    id: 2,
+    slug: "first-job-money-tips",
+    title: "Got Your First Job? Here's How to Handle Your Money Like a Pro",
+    excerpt:
+      "Congratulations on your first job! Now let's make sure you're making smart decisions with your hard-earned money from day one.",
     author: "Mike Chen",
     date: "2024-01-10",
-    readTime: "12 min read",
-    category: "Career",
-    tags: ["summer jobs", "teens", "career", "work experience"],
-    image: "/placeholder.svg?height=300&width=500",
-  },
-  {
-    slug: "saving-for-college",
-    title: "Smart Strategies for Saving for College",
-    excerpt: "Learn effective ways to save money for college expenses and reduce student debt.",
-    author: "Dr. Emily Rodriguez",
-    date: "2024-01-05",
-    readTime: "15 min read",
-    category: "Savings",
-    tags: ["college", "savings", "education", "financial planning"],
-    image: "/placeholder.svg?height=300&width=500",
-  },
-  {
-    slug: "investing-for-beginners",
-    title: "Investing 101: A Beginner's Guide for Teens",
-    excerpt: "Start your investment journey early with this comprehensive guide to investing basics.",
-    author: "Alex Thompson",
-    date: "2024-01-01",
-    readTime: "10 min read",
-    category: "Investing",
-    tags: ["investing", "stocks", "beginners", "financial literacy"],
-    image: "/placeholder.svg?height=300&width=500",
-  },
-  {
-    slug: "side-hustles-for-teens",
-    title: "10 Profitable Side Hustles for Teenagers",
-    excerpt: "Explore creative ways to earn money as a teen with these proven side hustle ideas.",
-    author: "Jessica Park",
-    date: "2023-12-28",
-    readTime: "9 min read",
-    category: "Career",
-    tags: ["side hustles", "entrepreneurship", "teens", "income"],
-    image: "/placeholder.svg?height=300&width=500",
-  },
-  {
-    slug: "credit-cards-for-teens",
-    title: "Understanding Credit: A Teen's Guide to Building Credit",
-    excerpt: "Learn about credit scores, credit cards, and how to build good credit from a young age.",
-    author: "Robert Kim",
-    date: "2023-12-25",
-    readTime: "11 min read",
-    category: "Credit",
-    tags: ["credit", "credit cards", "credit score", "financial responsibility"],
-    image: "/placeholder.svg?height=300&width=500",
-  },
-  {
-    slug: "money-mindset-for-teens",
-    title: "Developing a Healthy Money Mindset as a Teenager",
-    excerpt: "Explore the psychology of money and develop positive financial attitudes that will last a lifetime.",
-    author: "Dr. Maria Santos",
-    date: "2023-12-20",
     readTime: "7 min read",
-    category: "Psychology",
-    tags: ["money mindset", "psychology", "financial wellness", "teens"],
-    image: "/placeholder.svg?height=300&width=500",
+    category: "Career",
+    tags: ["first-job", "paycheck", "career", "money-management"],
+    featured: true,
+    image: "/placeholder.svg?height=300&width=400",
+    likes: 89,
   },
   {
-    slug: "emergency-fund-teens",
-    title: "Why Every Teen Needs an Emergency Fund",
-    excerpt: "Learn the importance of emergency funds and how to build one as a teenager.",
-    author: "Sarah Johnson",
-    date: "2023-12-15",
-    readTime: "6 min read",
-    category: "Savings",
-    tags: ["emergency fund", "savings", "financial security", "teens"],
-    image: "/placeholder.svg?height=300&width=500",
-  },
-  {
-    slug: "financial-apps-for-teens",
-    title: "Best Financial Apps Every Teen Should Use",
-    excerpt: "Discover the top apps that can help teenagers manage money, save, and learn about finance.",
-    author: "Tech Team",
-    date: "2023-12-10",
+    id: 3,
+    slug: "saving-for-college",
+    title: "Saving for College: A Teen's Complete Guide",
+    excerpt:
+      "College is expensive, but with the right strategy, you can reduce the financial burden and graduate with less debt.",
+    author: "Dr. Lisa Rodriguez",
+    date: "2024-01-05",
     readTime: "8 min read",
-    category: "Technology",
-    tags: ["apps", "technology", "money management", "teens"],
-    image: "/placeholder.svg?height=300&width=500",
+    category: "Education",
+    tags: ["college", "savings", "education", "planning"],
+    featured: false,
+    image: "/placeholder.svg?height=300&width=400",
+    likes: 156,
   },
   {
-    slug: "teen-entrepreneur-stories",
-    title: "Inspiring Teen Entrepreneur Success Stories",
-    excerpt: "Get motivated by real stories of teenagers who started successful businesses.",
-    author: "Mike Chen",
-    date: "2023-12-05",
-    readTime: "13 min read",
+    id: 4,
+    slug: "teen-side-hustles-2024",
+    title: "10 Profitable Side Hustles for Teens in 2024",
+    excerpt:
+      "Discover legitimate ways to earn money as a teenager, from online opportunities to local services that can boost your income.",
+    author: "Alex Thompson",
+    date: "2023-12-28",
+    readTime: "6 min read",
     category: "Entrepreneurship",
-    tags: ["entrepreneurship", "success stories", "teens", "business"],
-    image: "/placeholder.svg?height=300&width=500",
+    tags: ["side-hustles", "entrepreneurship", "teens", "income"],
+    featured: false,
+    image: "/placeholder.svg?height=300&width=400",
+    likes: 203,
+  },
+  {
+    id: 5,
+    slug: "building-credit-as-teen",
+    title: "Building Credit as a Teen: A Smart Start to Your Financial Future",
+    excerpt:
+      "Learn how to start building credit responsibly as a teenager and set yourself up for financial success in adulthood.",
+    author: "Jennifer Park",
+    date: "2023-12-20",
+    readTime: "6 min read",
+    category: "Credit",
+    tags: ["credit", "teens", "financial-planning", "responsibility"],
+    featured: false,
+    image: "/placeholder.svg?height=300&width=400",
+    likes: 94,
+  },
+  {
+    id: 6,
+    slug: "teen-investing-guide",
+    title: "Teen Investing 101: Growing Your Money for the Future",
+    excerpt:
+      "It's never too early to start investing. Learn the basics of investing as a teenager and how to make your money work for you.",
+    author: "Robert Kim",
+    date: "2023-12-15",
+    readTime: "9 min read",
+    category: "Investing",
+    tags: ["investing", "teens", "stocks", "future-planning"],
+    featured: false,
+    image: "/placeholder.svg?height=300&width=400",
+    likes: 178,
   },
 ]
 
-const categories = [
-  "All",
-  "Budgeting",
-  "Career",
-  "Savings",
-  "Investing",
-  "Credit",
-  "Psychology",
-  "Technology",
-  "Entrepreneurship",
+const categories = ["All", "Budgeting", "Career", "Education", "Entrepreneurship", "Credit", "Investing"]
+const sortOptions = [
+  { value: "newest", label: "Newest First" },
+  { value: "oldest", label: "Oldest First" },
+  { value: "popular", label: "Most Popular" },
+  { value: "title", label: "Title A-Z" },
 ]
 
 export default function AllArticlesPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [sortBy, setSortBy] = useState("newest")
+  const [showFilters, setShowFilters] = useState(false)
 
-  // Filter and sort posts
-  const filteredPosts = allBlogPosts
+  const filteredAndSortedPosts = blogPosts
     .filter((post) => {
       const matchesSearch =
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        post.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        post.author.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesCategory = selectedCategory === "All" || post.category === selectedCategory
       return matchesSearch && matchesCategory
     })
@@ -157,43 +134,44 @@ export default function AllArticlesPage() {
           return new Date(b.date).getTime() - new Date(a.date).getTime()
         case "oldest":
           return new Date(a.date).getTime() - new Date(b.date).getTime()
+        case "popular":
+          return b.likes - a.likes
         case "title":
           return a.title.localeCompare(b.title)
-        case "readTime":
-          return Number.parseInt(a.readTime) - Number.parseInt(b.readTime)
         default:
           return 0
       }
     })
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50">
-      <div className="container mx-auto px-4 py-8">
-        <BackButton />
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-accent/5">
+      <div className="container mx-auto py-8 px-4">
+        <BackButton className="mb-6" />
 
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">All Articles</h1>
-          <p className="text-lg text-muted-foreground">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-4">All Articles</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Explore our complete collection of financial education articles for teens
           </p>
         </div>
 
-        {/* Search and Filter Controls */}
-        <div className="mb-8 space-y-4">
-          <div className="flex flex-col md:flex-row gap-4">
+        {/* Search and Filters */}
+        <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search */}
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
-                placeholder="Search articles..."
+                placeholder="Search articles, authors, or topics..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
 
+            {/* Category Filter */}
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full md:w-48">
-                <Filter className="h-4 w-4 mr-2" />
+              <SelectTrigger className="w-full lg:w-48">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -205,126 +183,85 @@ export default function AllArticlesPage() {
               </SelectContent>
             </Select>
 
+            {/* Sort */}
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-full md:w-48">
+              <SelectTrigger className="w-full lg:w-48">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="newest">Newest First</SelectItem>
-                <SelectItem value="oldest">Oldest First</SelectItem>
-                <SelectItem value="title">Title A-Z</SelectItem>
-                <SelectItem value="readTime">Read Time</SelectItem>
+                {sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
+
+            {/* Mobile Filter Toggle */}
+            <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="lg:hidden">
+              <Filter className="h-4 w-4 mr-2" />
+              Filters
+            </Button>
           </div>
 
           {/* Active Filters */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {selectedCategory !== "All" && (
-              <Badge variant="secondary" className="flex items-center gap-1">
-                {selectedCategory}
-                <button
-                  onClick={() => setSelectedCategory("All")}
-                  className="ml-1 hover:bg-muted-foreground/20 rounded-full p-0.5"
-                >
-                  ×
-                </button>
-              </Badge>
-            )}
-            {searchTerm && (
-              <Badge variant="secondary" className="flex items-center gap-1">
-                Search: "{searchTerm}"
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="ml-1 hover:bg-muted-foreground/20 rounded-full p-0.5"
-                >
-                  ×
-                </button>
-              </Badge>
-            )}
-          </div>
+          {(searchTerm || selectedCategory !== "All") && (
+            <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t">
+              <span className="text-sm text-muted-foreground">Active filters:</span>
+              {searchTerm && (
+                <Badge variant="secondary" className="text-xs">
+                  Search: "{searchTerm}"
+                  <button onClick={() => setSearchTerm("")} className="ml-1 hover:text-destructive">
+                    ×
+                  </button>
+                </Badge>
+              )}
+              {selectedCategory !== "All" && (
+                <Badge variant="secondary" className="text-xs">
+                  Category: {selectedCategory}
+                  <button onClick={() => setSelectedCategory("All")} className="ml-1 hover:text-destructive">
+                    ×
+                  </button>
+                </Badge>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setSearchTerm("")
+                  setSelectedCategory("All")
+                }}
+                className="text-xs h-6 px-2"
+              >
+                Clear all
+              </Button>
+            </div>
+          )}
         </div>
 
-        {/* Results Count */}
-        <div className="mb-6">
+        {/* Results Summary */}
+        <div className="flex items-center justify-between mb-6">
           <p className="text-muted-foreground">
-            Showing {filteredPosts.length} of {allBlogPosts.length} articles
+            {filteredAndSortedPosts.length} article{filteredAndSortedPosts.length !== 1 ? "s" : ""} found
           </p>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>Sort:</span>
+            {sortBy === "newest" && <SortDesc className="h-4 w-4" />}
+            {sortBy === "oldest" && <SortAsc className="h-4 w-4" />}
+            <span>{sortOptions.find((opt) => opt.value === sortBy)?.label}</span>
+          </div>
         </div>
 
         {/* Articles Grid */}
-        {filteredPosts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPosts.map((post) => (
-              <Card key={post.slug} className="hover:shadow-lg transition-shadow group">
-                <CardContent className="p-0">
-                  <img
-                    src={post.image || "/placeholder.svg"}
-                    alt={post.title}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <Badge variant="secondary">{post.category}</Badge>
-                      <div className="flex items-center text-xs text-muted-foreground">
-                        <Clock className="h-3 w-3 mr-1" />
-                        {post.readTime}
-                      </div>
-                    </div>
-
-                    <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{post.excerpt}</p>
-
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-                      <div className="flex items-center">
-                        <User className="h-3 w-3 mr-1" />
-                        {post.author}
-                      </div>
-                      <div className="flex items-center">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        {new Date(post.date).toLocaleDateString()}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap gap-1">
-                        {post.tags.slice(0, 2).map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                        {post.tags.length > 2 && (
-                          <Badge variant="outline" className="text-xs">
-                            +{post.tags.length - 2}
-                          </Badge>
-                        )}
-                      </div>
-
-                      <Link href={`/blog/${post.slug}`}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="group-hover:bg-primary group-hover:text-white transition-colors"
-                        >
-                          Read <ArrowRight className="h-3 w-3 ml-1" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
+        {filteredAndSortedPosts.length === 0 ? (
           <div className="text-center py-12">
-            <h3 className="text-lg font-medium mb-2">No articles found</h3>
+            <div className="text-6xl mb-4">📚</div>
+            <h3 className="text-xl font-semibold mb-2">No articles found</h3>
             <p className="text-muted-foreground mb-4">
               Try adjusting your search terms or filters to find what you're looking for.
             </p>
             <Button
+              variant="outline"
               onClick={() => {
                 setSearchTerm("")
                 setSelectedCategory("All")
@@ -333,16 +270,89 @@ export default function AllArticlesPage() {
               Clear Filters
             </Button>
           </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredAndSortedPosts.map((post) => (
+              <Card
+                key={post.id}
+                className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+              >
+                <div className="relative h-48">
+                  <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
+                  <Badge className="absolute top-3 left-3 bg-primary text-xs">{post.category}</Badge>
+                  {post.featured && <Badge className="absolute top-3 right-3 bg-yellow-500 text-xs">Featured</Badge>}
+                </div>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg line-clamp-2 leading-tight">{post.title}</CardTitle>
+                  <CardDescription className="line-clamp-3 text-sm">{post.excerpt}</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                    <div className="flex items-center gap-1">
+                      <User className="h-3 w-3" />
+                      <span>{post.author}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      <span>{post.readTime}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      <span>{new Date(post.date).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span>❤️ {post.likes}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {post.tags.slice(0, 3).map((tag) => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {post.tags.length > 3 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{post.tags.length - 3}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <Link href={`/blog/${post.slug}`}>
+                    <Button size="sm" className="w-full">
+                      Read Article
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         )}
 
         {/* Load More Button (for future pagination) */}
-        {filteredPosts.length > 0 && filteredPosts.length >= 9 && (
+        {filteredAndSortedPosts.length > 0 && (
           <div className="text-center mt-12">
-            <Button variant="outline" size="lg">
-              Load More Articles
-            </Button>
+            <p className="text-muted-foreground mb-4">Showing all {filteredAndSortedPosts.length} articles</p>
+            <Link href="/blog">
+              <Button variant="outline">Back to Blog Home</Button>
+            </Link>
           </div>
         )}
+
+        {/* Newsletter Signup */}
+        <section className="mt-16 bg-white rounded-lg p-8 text-center shadow-sm">
+          <h3 className="text-2xl font-bold mb-4">Never Miss an Article</h3>
+          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            Subscribe to our newsletter and get the latest financial tips and articles delivered to your inbox weekly.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <Input placeholder="Enter your email" type="email" />
+            <Button>Subscribe</Button>
+          </div>
+        </section>
       </div>
     </div>
   )
