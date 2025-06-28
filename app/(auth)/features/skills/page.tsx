@@ -45,7 +45,7 @@ export default function SkillsFeaturePage() {
           </div>
           <div className="bg-gradient-to-br from-accent/10 to-secondary/10 rounded-lg p-8 flex items-center justify-center">
             <img
-              src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+              src="https://www.google.com/imgres?q=skill%20tree%20cute&imgurl=https%3A%2F%2Fthumbs.dreamstime.com%2Fb%2Flearning-tree-logo-knowledge-education-icon-icons-ideas-47303422.jpg&imgrefurl=https%3A%2F%2Fwww.dreamstime.com%2Fillustration%2Fskill-tree.html&docid=yWJ1liFCp8E7dM&tbnid=TPK405qwyzakpM&vet=12ahUKEwiSjOjqtJOOAxW6hv0HHZX6FEkQM3oFCIIBEAA..i&w=800&h=864&hcb=2&ved=2ahUKEwiSjOjqtJOOAxW6hv0HHZX6FEkQM3oFCIIBEAA"
               alt="Interactive skill tree showing different abilities and levels"
               className="rounded-lg shadow-lg"
             />
