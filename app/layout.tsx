@@ -10,7 +10,7 @@ const outfit = Outfit({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "BudgetBuddy - Level Up Your Money Game!",
   description: "The fun way for teens to master money and discover jobs",
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({

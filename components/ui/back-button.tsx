@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -26,9 +26,10 @@ export function BackButton({ className, href, children }: BackButtonProps) {
 
   return (
     <Button
-      variant="outline"
+      variant="ghost"
+      size="sm"
       onClick={handleBack}
-      className={cn("border-primary text-primary hover:bg-primary hover:text-white", className)}
+      className={cn("flex items-center text-muted-foreground hover:text-foreground", className)}
     >
       <ArrowLeft className="mr-2 h-4 w-4" />
       {children || "Back"}
