@@ -53,25 +53,60 @@ export default function LandingPage() {
     }))
   }
 
+  // Create prototype user data
+  const createPrototypeUser = () => {
+    return {
+      id: "prototype_user_001",
+      username: "BudgetHero",
+      email: "demo@budgetbuddy.com",
+      firstName: "Budget",
+      lastName: "Hero",
+      level: 5,
+      xp: 1250,
+      coins: 850,
+      totalSaved: 2500,
+      goalsCompleted: 3,
+      joinDate: new Date().toISOString(),
+      avatar: "hero",
+      achievements: ["first_save", "goal_crusher", "money_master"],
+      currentStreak: 7,
+      isPrototype: true,
+    }
+  }
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
+      // Basic validation
+      if (!loginData.email || !loginData.password) {
+        alert("Please fill in all fields")
+        setIsLoading(false)
+        return
+      }
+
       // Simulate login process
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      // For demo purposes, simulate successful login
+      // Create prototype user for demo
+      const prototypeUser = createPrototypeUser()
+
+      // Store user data safely
       if (typeof window !== "undefined") {
         localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
         localStorage.setItem(
-          "budgetbuddy_user",
+          "budgetbuddy_session",
           JSON.stringify({
-            username: loginData.email.split("@")[0] || "demo_user",
-            email: loginData.email,
+            loginTime: new Date().toISOString(),
+            sessionId: `session_${Date.now()}`,
+            remember: loginData.remember,
           }),
         )
       }
+
+      // Navigate to dashboard
       router.push("/dashboard")
     } catch (error) {
       console.error("Login error:", error)
@@ -87,6 +122,12 @@ export default function LandingPage() {
 
     try {
       // Validate form
+      if (!registerData.username || !registerData.email || !registerData.password) {
+        alert("Please fill in all fields")
+        setIsLoading(false)
+        return
+      }
+
       if (!registerData.terms) {
         alert("Please accept the terms and conditions")
         setIsLoading(false)
@@ -96,18 +137,28 @@ export default function LandingPage() {
       // Simulate registration process
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      // Store user data and redirect to onboarding
+      // Create prototype user for demo (same as login)
+      const prototypeUser = createPrototypeUser()
+      // Override with registration data
+      prototypeUser.username = registerData.username || "BudgetHero"
+      prototypeUser.email = registerData.email || "demo@budgetbuddy.com"
+
+      // Store user data safely
       if (typeof window !== "undefined") {
         localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
         localStorage.setItem(
-          "budgetbuddy_user",
+          "budgetbuddy_session",
           JSON.stringify({
-            username: registerData.username,
-            email: registerData.email,
+            loginTime: new Date().toISOString(),
+            sessionId: `session_${Date.now()}`,
+            isNewUser: true,
           }),
         )
       }
-      router.push("/onboarding")
+
+      // Navigate to dashboard (skip onboarding for prototype)
+      router.push("/dashboard")
     } catch (error) {
       console.error("Registration error:", error)
       alert("Registration failed. Please try again.")
@@ -119,22 +170,29 @@ export default function LandingPage() {
   const handleStartAdventure = async () => {
     setIsLoading(true)
     try {
-      // Simulate successful login and redirect to dashboard
+      // Create prototype user for demo
+      const prototypeUser = createPrototypeUser()
+
+      // Store user data safely
       if (typeof window !== "undefined") {
         localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
         localStorage.setItem(
-          "budgetbuddy_user",
+          "budgetbuddy_session",
           JSON.stringify({
-            username: "new_adventurer",
-            email: "adventurer@budgetbuddy.com",
+            loginTime: new Date().toISOString(),
+            sessionId: `session_${Date.now()}`,
+            quickStart: true,
           }),
         )
       }
+
+      // Navigate to dashboard
       router.push("/dashboard")
     } catch (error) {
       console.error("Start adventure error:", error)
-      // Fallback to onboarding if there's an issue
-      router.push("/onboarding")
+      // Fallback navigation
+      router.push("/dashboard")
     } finally {
       setIsLoading(false)
     }
