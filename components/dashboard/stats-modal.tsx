@@ -1,282 +1,218 @@
 "use client"
 
-import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from "recharts"
-import { TrendingUp, Calendar, Award, Target, DollarSign, Zap } from "lucide-react"
+import { Trophy, Coins, TrendingUp, Calendar, Star, Target } from "lucide-react"
+
+interface UserData {
+  id: string
+  username: string
+  level: number
+  xp: number
+  coins: number
+  totalSaved: number
+  goalsCompleted: number
+  currentStreak: number
+  achievements: string[]
+}
 
 interface StatsModalProps {
   isOpen: boolean
   onClose: () => void
-  statType: "gold" | "savings" | "quests" | "achievements"
+  statType: string | null
+  userData: UserData
 }
 
-// Sample data for different time periods
-const generateData = (period: string, statType: string) => {
-  const baseData = {
-    week: [
-      { name: "Mon", value: 45, previous: 40 },
-      { name: "Tue", value: 52, previous: 45 },
-      { name: "Wed", value: 48, previous: 50 },
-      { name: "Thu", value: 61, previous: 55 },
-      { name: "Fri", value: 55, previous: 48 },
-      { name: "Sat", value: 67, previous: 60 },
-      { name: "Sun", value: 72, previous: 65 },
-    ],
-    month: [
-      { name: "Week 1", value: 180, previous: 160 },
-      { name: "Week 2", value: 220, previous: 200 },
-      { name: "Week 3", value: 195, previous: 180 },
-      { name: "Week 4", value: 250, previous: 220 },
-    ],
-    year: [
-      { name: "Jan", value: 850, previous: 800 },
-      { name: "Feb", value: 920, previous: 850 },
-      { name: "Mar", value: 1100, previous: 950 },
-      { name: "Apr", value: 1050, previous: 1000 },
-      { name: "May", value: 1200, previous: 1100 },
-      { name: "Jun", value: 1350, previous: 1200 },
-    ],
-    all: [
-      { name: "2022", value: 2500, previous: 0 },
-      { name: "2023", value: 5200, previous: 2500 },
-      { name: "2024", value: 8750, previous: 5200 },
-    ],
+export function StatsModal({ isOpen, onClose, statType, userData }: StatsModalProps) {
+  if (!statType || !userData) return null
+
+  const getStatDetails = () => {
+    switch (statType) {
+      case "level":
+        const xpForNextLevel = (userData.level + 1) * 1000
+        const currentLevelXP = userData.xp % 1000
+        const xpProgress = (currentLevelXP / 1000) * 100
+
+        return {
+          title: "Level Progress",
+          icon: Trophy,
+          color: "text-yellow-600",
+          content: (
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-yellow-600 mb-2">Level {userData.level}</div>
+                <p className="text-muted-foreground">Total XP: {userData.xp}</p>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span>Progress to Level {userData.level + 1}</span>
+                  <span>{currentLevelXP}/1000 XP</span>
+                </div>
+                <Progress value={xpProgress} className="h-3" />
+                <p className="text-sm text-muted-foreground text-center">
+                  {1000 - currentLevelXP} XP needed for next level
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="p-3 bg-primary/10 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">{userData.achievements.length}</div>
+                  <div className="text-sm text-muted-foreground">Achievements</div>
+                </div>
+                <div className="p-3 bg-secondary/10 rounded-lg">
+                  <div className="text-2xl font-bold text-secondary">{userData.goalsCompleted}</div>
+                  <div className="text-sm text-muted-foreground">Goals Completed</div>
+                </div>
+              </div>
+            </div>
+          ),
+        }
+
+      case "coins":
+        return {
+          title: "Coin Balance",
+          icon: Coins,
+          color: "text-amber-600",
+          content: (
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-amber-600 mb-2">{userData.coins}</div>
+                <p className="text-muted-foreground">Total Coins Earned</p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-semibold">How to Earn More Coins:</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span className="text-sm">Complete daily quests</span>
+                    <Badge variant="secondary">+10-50 coins</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span className="text-sm">Reach savings goals</span>
+                    <Badge variant="secondary">+100 coins</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span className="text-sm">Track expenses daily</span>
+                    <Badge variant="secondary">+25 coins</Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ),
+        }
+
+      case "saved":
+        return {
+          title: "Savings Progress",
+          icon: TrendingUp,
+          color: "text-green-600",
+          content: (
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-green-600 mb-2">${userData.totalSaved}</div>
+                <p className="text-muted-foreground">Total Amount Saved</p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium">Monthly Average</span>
+                    <span className="text-green-600 font-bold">${Math.round(userData.totalSaved / 6)}</span>
+                  </div>
+                  <Progress value={75} className="h-2" />
+                </div>
+
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium">Savings Rate</span>
+                    <span className="text-blue-600 font-bold">23%</span>
+                  </div>
+                  <Progress value={23} className="h-2" />
+                </div>
+              </div>
+
+              <div className="text-center p-3 bg-green-50 rounded-lg">
+                <Star className="h-6 w-6 text-green-600 mx-auto mb-2" />
+                <p className="text-sm text-green-700">Great job! You're building healthy saving habits.</p>
+              </div>
+            </div>
+          ),
+        }
+
+      case "streak":
+        return {
+          title: "Daily Streak",
+          icon: Calendar,
+          color: "text-orange-600",
+          content: (
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-orange-600 mb-2">{userData.currentStreak}</div>
+                <p className="text-muted-foreground">Days in a Row</p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-semibold">Streak Milestones:</h4>
+                <div className="space-y-2">
+                  <div
+                    className={`flex items-center justify-between p-2 rounded ${userData.currentStreak >= 7 ? "bg-green-50 text-green-700" : "bg-gray-50"}`}
+                  >
+                    <span className="text-sm">7 Day Streak</span>
+                    <Badge variant={userData.currentStreak >= 7 ? "default" : "secondary"}>
+                      {userData.currentStreak >= 7 ? "✓ Completed" : "In Progress"}
+                    </Badge>
+                  </div>
+                  <div
+                    className={`flex items-center justify-between p-2 rounded ${userData.currentStreak >= 30 ? "bg-green-50 text-green-700" : "bg-gray-50"}`}
+                  >
+                    <span className="text-sm">30 Day Streak</span>
+                    <Badge variant={userData.currentStreak >= 30 ? "default" : "secondary"}>
+                      {userData.currentStreak >= 30 ? "✓ Completed" : `${30 - userData.currentStreak} days to go`}
+                    </Badge>
+                  </div>
+                  <div
+                    className={`flex items-center justify-between p-2 rounded ${userData.currentStreak >= 100 ? "bg-green-50 text-green-700" : "bg-gray-50"}`}
+                  >
+                    <span className="text-sm">100 Day Streak</span>
+                    <Badge variant={userData.currentStreak >= 100 ? "default" : "secondary"}>
+                      {userData.currentStreak >= 100 ? "✓ Completed" : `${100 - userData.currentStreak} days to go`}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center p-3 bg-orange-50 rounded-lg">
+                <Target className="h-6 w-6 text-orange-600 mx-auto mb-2" />
+                <p className="text-sm text-orange-700">
+                  Keep logging in daily to maintain your streak and earn bonus XP!
+                </p>
+              </div>
+            </div>
+          ),
+        }
+
+      default:
+        return null
+    }
   }
 
-  const multipliers = {
-    gold: 1,
-    savings: 0.8,
-    quests: 0.1,
-    achievements: 0.05,
-  }
+  const statDetails = getStatDetails()
+  if (!statDetails) return null
 
-  const data = baseData[period as keyof typeof baseData] || baseData.week
-  const multiplier = multipliers[statType as keyof typeof multipliers] || 1
-
-  return data.map((item) => ({
-    ...item,
-    value: Math.round(item.value * multiplier),
-    previous: Math.round(item.previous * multiplier),
-  }))
-}
-
-const statConfig = {
-  gold: {
-    title: "Current Gold",
-    icon: DollarSign,
-    color: "#f59e0b",
-    description: "Your total accumulated gold from completing quests and achievements",
-    unit: "G",
-  },
-  savings: {
-    title: "Savings Power",
-    icon: TrendingUp,
-    color: "#10b981",
-    description: "Your total savings and financial growth over time",
-    unit: "$",
-  },
-  quests: {
-    title: "Quests Completed",
-    icon: Target,
-    color: "#8b5cf6",
-    description: "Number of financial quests and challenges you've completed",
-    unit: "",
-  },
-  achievements: {
-    title: "Achievement Points",
-    icon: Award,
-    color: "#f97316",
-    description: "Points earned from unlocking various achievements",
-    unit: "pts",
-  },
-}
-
-export function StatsModal({ isOpen, onClose, statType }: StatsModalProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState("week")
-  const config = statConfig[statType]
-  const data = generateData(selectedPeriod, statType)
-  const IconComponent = config.icon
-
-  const currentValue = data[data.length - 1]?.value || 0
-  const previousValue = data[data.length - 2]?.value || 0
-  const growth = previousValue > 0 ? ((currentValue - previousValue) / previousValue) * 100 : 0
+  const Icon = statDetails.icon
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center">
-            <IconComponent className="mr-2 h-6 w-6" style={{ color: config.color }} />
-            {config.title} Analytics
+            <Icon className={`mr-2 h-5 w-5 ${statDetails.color}`} />
+            {statDetails.title}
           </DialogTitle>
         </DialogHeader>
-
-        <div className="space-y-6">
-          {/* Current Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-center">
-                  <h3 className="text-sm font-medium text-muted-foreground">Current</h3>
-                  <p className="text-2xl font-bold" style={{ color: config.color }}>
-                    {config.unit}
-                    {currentValue.toLocaleString()}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-center">
-                  <h3 className="text-sm font-medium text-muted-foreground">Growth</h3>
-                  <p className={`text-2xl font-bold ${growth >= 0 ? "text-green-500" : "text-red-500"}`}>
-                    {growth >= 0 ? "+" : ""}
-                    {growth.toFixed(1)}%
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-center">
-                  <h3 className="text-sm font-medium text-muted-foreground">Rank</h3>
-                  <p className="text-2xl font-bold text-primary">#{Math.floor(Math.random() * 50) + 1}</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Description */}
-          <Card>
-            <CardContent className="p-4">
-              <p className="text-sm text-muted-foreground">{config.description}</p>
-            </CardContent>
-          </Card>
-
-          {/* Time Period Selector */}
-          <Tabs value={selectedPeriod} onValueChange={setSelectedPeriod}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="week">Week</TabsTrigger>
-              <TabsTrigger value="month">Month</TabsTrigger>
-              <TabsTrigger value="year">Year</TabsTrigger>
-              <TabsTrigger value="all">All Time</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value={selectedPeriod} className="mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Calendar className="mr-2 h-5 w-5" />
-                    {selectedPeriod.charAt(0).toUpperCase() + selectedPeriod.slice(1)} Progress
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      {statType === "gold" || statType === "savings" ? (
-                        <AreaChart data={data}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis />
-                          <Tooltip
-                            formatter={(value) => [`${config.unit}${value}`, config.title]}
-                            labelStyle={{ color: "#000" }}
-                          />
-                          <Area
-                            type="monotone"
-                            dataKey="value"
-                            stroke={config.color}
-                            fill={config.color}
-                            fillOpacity={0.3}
-                          />
-                          <Area type="monotone" dataKey="previous" stroke="#e5e7eb" fill="#f3f4f6" fillOpacity={0.2} />
-                        </AreaChart>
-                      ) : (
-                        <BarChart data={data}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis />
-                          <Tooltip
-                            formatter={(value) => [`${value}${config.unit}`, config.title]}
-                            labelStyle={{ color: "#000" }}
-                          />
-                          <Bar dataKey="value" fill={config.color} radius={[4, 4, 0, 0]} />
-                          <Bar dataKey="previous" fill="#e5e7eb" radius={[4, 4, 0, 0]} />
-                        </BarChart>
-                      )}
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-
-          {/* Insights */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Zap className="mr-2 h-5 w-5 text-primary" />
-                Insights & Tips
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {statType === "gold" && (
-                  <>
-                    <div className="flex items-start space-x-2">
-                      <Badge className="bg-yellow-100 text-yellow-800">Tip</Badge>
-                      <p className="text-sm">Complete daily quests to earn consistent gold rewards!</p>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <Badge className="bg-blue-100 text-blue-800">Insight</Badge>
-                      <p className="text-sm">Your gold earning rate has increased by 23% this month.</p>
-                    </div>
-                  </>
-                )}
-                {statType === "savings" && (
-                  <>
-                    <div className="flex items-start space-x-2">
-                      <Badge className="bg-green-100 text-green-800">Tip</Badge>
-                      <p className="text-sm">Try saving $5 more per week to reach your goals faster!</p>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <Badge className="bg-blue-100 text-blue-800">Insight</Badge>
-                      <p className="text-sm">You're saving 15% more than teens your age on average.</p>
-                    </div>
-                  </>
-                )}
-                {statType === "quests" && (
-                  <>
-                    <div className="flex items-start space-x-2">
-                      <Badge className="bg-purple-100 text-purple-800">Tip</Badge>
-                      <p className="text-sm">Focus on completing 2-3 quests per week for steady progress.</p>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <Badge className="bg-blue-100 text-blue-800">Insight</Badge>
-                      <p className="text-sm">You complete quests 40% faster than when you started!</p>
-                    </div>
-                  </>
-                )}
-                {statType === "achievements" && (
-                  <>
-                    <div className="flex items-start space-x-2">
-                      <Badge className="bg-orange-100 text-orange-800">Tip</Badge>
-                      <p className="text-sm">Check the achievements page for new challenges to unlock!</p>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <Badge className="bg-blue-100 text-blue-800">Insight</Badge>
-                      <p className="text-sm">You're only 2 achievements away from the next tier!</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <div className="mt-4">{statDetails.content}</div>
       </DialogContent>
     </Dialog>
   )

@@ -1,128 +1,196 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Sparkles, TrendingUp, Target, Award, DollarSign } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Trophy, Zap, Coins, Target, TrendingUp, Calendar } from "lucide-react"
 import { StatsModal } from "./stats-modal"
 
-export function PlayerStats() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedStat, setSelectedStat] = useState<"gold" | "savings" | "quests" | "achievements">("gold")
+interface UserData {
+  id: string
+  username: string
+  email: string
+  level: number
+  xp: number
+  coins: number
+  totalSaved: number
+  goalsCompleted: number
+  currentStreak: number
+  achievements: string[]
+}
 
-  const handleStatClick = (statType: "gold" | "savings" | "quests" | "achievements") => {
-    setSelectedStat(statType)
-    setIsModalOpen(true)
+export function PlayerStats() {
+  const [userData, setUserData] = useState<UserData | null>(null)
+  const [selectedStat, setSelectedStat] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const storedUser = localStorage.getItem("budgetbuddy_user")
+        if (storedUser) {
+          const user = JSON.parse(storedUser)
+          setUserData(user)
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error)
+      }
+    }
+  }, [])
+
+  if (!userData) {
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <Card key={i} className="animate-pulse">
+            <CardContent className="p-4">
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    )
   }
+
+  // Calculate XP needed for next level
+  const xpForNextLevel = (userData.level + 1) * 1000
+  const xpProgress = (userData.xp % 1000) / 10 // Convert to percentage
+
+  const stats = [
+    {
+      id: "level",
+      title: "Level",
+      value: userData.level,
+      icon: Trophy,
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50",
+      description: `${userData.xp} XP total`,
+      progress: xpProgress,
+      progressLabel: `${userData.xp % 1000}/1000 XP to next level`,
+    },
+    {
+      id: "coins",
+      title: "Coins",
+      value: userData.coins,
+      icon: Coins,
+      color: "text-amber-600",
+      bgColor: "bg-amber-50",
+      description: "Earned from completing tasks",
+    },
+    {
+      id: "saved",
+      title: "Total Saved",
+      value: `$${userData.totalSaved}`,
+      icon: TrendingUp,
+      color: "text-green-600",
+      bgColor: "bg-green-50",
+      description: "Your savings journey",
+    },
+    {
+      id: "streak",
+      title: "Daily Streak",
+      value: userData.currentStreak,
+      icon: Calendar,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
+      description: "Days in a row",
+    },
+  ]
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Player Profile Card */}
-        <Card className="border-2 border-primary/20 overflow-hidden">
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Avatar className="h-16 w-16 border-4 border-primary/20">
-                  <AvatarImage src="/placeholder.svg?height=64&width=64" />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white font-bold text-lg">
-                    JD
-                  </AvatarFallback>
-                </Avatar>
-                <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1">
-                  <Sparkles className="h-3 w-3 text-white" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {stats.map((stat) => {
+          const Icon = stat.icon
+          return (
+            <Card
+              key={stat.id}
+              className="cursor-pointer hover:shadow-md transition-shadow border-2 border-transparent hover:border-primary/20"
+              onClick={() => setSelectedStat(stat.id)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className={`p-2 rounded-lg ${stat.bgColor}`}>
+                    <Icon className={`h-4 w-4 ${stat.color}`} />
+                  </div>
+                  {stat.id === "level" && (
+                    <Badge variant="secondary" className="text-xs">
+                      +{userData.xp % 100} XP
+                    </Badge>
+                  )}
                 </div>
-              </div>
-              <div className="flex-1">
-                <h2 className="text-xl font-bold">Jamie Doe</h2>
-                <p className="text-muted-foreground">Financial Adventurer</p>
-                <div className="flex items-center mt-2">
-                  <Badge className="bg-gradient-to-r from-primary to-accent text-white">Level 7</Badge>
-                  <span className="text-sm text-muted-foreground ml-2">Next: 250 XP</span>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                  {stat.progress !== undefined && (
+                    <div className="space-y-1">
+                      <Progress value={stat.progress} className="h-2" />
+                      <p className="text-xs text-muted-foreground">{stat.progressLabel}</p>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="flex justify-between text-sm mb-1">
-                <span>Progress to Level 8</span>
-                <span>750/1000 XP</span>
-              </div>
-              <Progress
-                value={75}
-                className="h-2 bg-primary/10 [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-accent"
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Stats Grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <Card
-            className="border-2 border-primary/20 cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => handleStatClick("gold")}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Current Gold</p>
-                  <p className="text-xl font-bold text-yellow-500">1,247G</p>
-                </div>
-                <DollarSign className="h-8 w-8 text-yellow-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="border-2 border-primary/20 cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => handleStatClick("savings")}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Savings Power</p>
-                  <p className="text-xl font-bold text-green-500">$187</p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-green-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="border-2 border-primary/20 cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => handleStatClick("quests")}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Quests Completed</p>
-                  <p className="text-xl font-bold text-purple-500">23</p>
-                </div>
-                <Target className="h-8 w-8 text-purple-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="border-2 border-primary/20 cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => handleStatClick("achievements")}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Achievement Points</p>
-                  <p className="text-xl font-bold text-orange-500">450</p>
-                </div>
-                <Award className="h-8 w-8 text-orange-500" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
-      <StatsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} statType={selectedStat} />
+      {/* Quick Actions Row */}
+      <Card className="border-2 border-primary/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg flex items-center">
+            <Zap className="mr-2 h-5 w-5 text-primary" />
+            Quick Actions
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-auto py-3 flex flex-col items-center space-y-1 bg-transparent"
+            >
+              <Target className="h-4 w-4" />
+              <span className="text-xs">Set Goal</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-auto py-3 flex flex-col items-center space-y-1 bg-transparent"
+            >
+              <Coins className="h-4 w-4" />
+              <span className="text-xs">Add Money</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-auto py-3 flex flex-col items-center space-y-1 bg-transparent"
+            >
+              <TrendingUp className="h-4 w-4" />
+              <span className="text-xs">Track Expense</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-auto py-3 flex flex-col items-center space-y-1 bg-transparent"
+            >
+              <Trophy className="h-4 w-4" />
+              <span className="text-xs">View Achievements</span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Stats Modal */}
+      <StatsModal
+        isOpen={!!selectedStat}
+        onClose={() => setSelectedStat(null)}
+        statType={selectedStat}
+        userData={userData}
+      />
     </>
   )
 }
