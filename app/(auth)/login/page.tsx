@@ -25,9 +25,9 @@ export default function LoginPage() {
     remember: false,
   })
 
-  // Create prototype user data
+  // Create prototype user data with safe object handling
   const createPrototypeUser = () => {
-    return {
+    const userData = {
       id: "prototype_user_001",
       username: "BudgetHero",
       email: "demo@budgetbuddy.com",
@@ -43,7 +43,28 @@ export default function LoginPage() {
       achievements: ["first_save", "goal_crusher", "money_master"],
       currentStreak: 7,
       isPrototype: true,
+      stats: {
+        totalTransactions: 45,
+        savingsRate: 0.25,
+        budgetAccuracy: 0.85,
+        goalCompletionRate: 0.75,
+      },
+      preferences: {
+        theme: "light",
+        notifications: true,
+        currency: "USD",
+      },
     }
+
+    // Ensure safe object creation - prevent Object.entries errors
+    const safeUserData = {}
+    for (const key in userData) {
+      if (userData.hasOwnProperty(key)) {
+        safeUserData[key] = userData[key] !== null && userData[key] !== undefined ? userData[key] : ""
+      }
+    }
+
+    return safeUserData
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,23 +96,30 @@ export default function LoginPage() {
       // Create prototype user for demo
       const prototypeUser = createPrototypeUser()
 
-      // Store user data safely
+      // Store user data safely with error handling
       if (typeof window !== "undefined") {
-        localStorage.setItem("budgetbuddy_logged_in", "true")
-        localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
-        localStorage.setItem(
-          "budgetbuddy_session",
-          JSON.stringify({
-            loginTime: new Date().toISOString(),
-            sessionId: `session_${Date.now()}`,
-            remember: formData.remember,
-            loginMethod: "dedicated_login",
-          }),
-        )
+        try {
+          localStorage.setItem("budgetbuddy_logged_in", "true")
+          localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
+          localStorage.setItem(
+            "budgetbuddy_session",
+            JSON.stringify({
+              loginTime: new Date().toISOString(),
+              sessionId: `session_${Date.now()}`,
+              remember: formData.remember,
+              loginMethod: "dedicated_login",
+            }),
+          )
+        } catch (storageError) {
+          console.error("Storage error:", storageError)
+          setError("Unable to save login data. Please try again.")
+          setIsLoading(false)
+          return
+        }
       }
 
-      // Navigate to dashboard
-      router.push("/dashboard")
+      // Force navigation to dashboard
+      window.location.href = "/dashboard"
     } catch (error) {
       console.error("Login error:", error)
       setError("Login failed. Please check your credentials and try again.")

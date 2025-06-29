@@ -24,17 +24,24 @@ export default function DashboardLayout({
           const userData = localStorage.getItem("budgetbuddy_user")
 
           if (isLoggedIn === "true" && userData) {
-            const user = JSON.parse(userData)
-            if (user && user.id) {
-              setIsAuthenticated(true)
-            } else {
-              // Invalid user data, redirect to login
-              router.push("/")
+            try {
+              const user = JSON.parse(userData)
+              if (user && (user.id || user.username)) {
+                setIsAuthenticated(true)
+                setIsLoading(false)
+                return
+              }
+            } catch (parseError) {
+              console.error("Error parsing user data:", parseError)
             }
-          } else {
-            // Not logged in, redirect to landing page
-            router.push("/")
           }
+
+          // If we get here, authentication failed
+          console.log("Authentication failed, redirecting to landing page")
+          localStorage.removeItem("budgetbuddy_logged_in")
+          localStorage.removeItem("budgetbuddy_user")
+          localStorage.removeItem("budgetbuddy_session")
+          router.push("/")
         }
       } catch (error) {
         console.error("Auth check error:", error)
