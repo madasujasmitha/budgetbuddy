@@ -1,37 +1,43 @@
 "use client"
 
-import type React from "react"
-
-import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface BackButtonProps {
   className?: string
-  href?: string
-  children?: React.ReactNode
+  fallbackPath?: string
 }
 
-export function BackButton({ className, href, children }: BackButtonProps) {
+export function BackButton({ className, fallbackPath = "/" }: BackButtonProps) {
   const router = useRouter()
 
   const handleBack = () => {
-    if (href) {
-      router.push(href)
-    } else {
-      router.back()
+    try {
+      // Check if there's history to go back to
+      if (typeof window !== "undefined" && window.history.length > 1) {
+        router.back()
+      } else {
+        // Fallback to home page if no history
+        router.push(fallbackPath)
+      }
+    } catch (error) {
+      console.error("Navigation error:", error)
+      // Ultimate fallback
+      router.push(fallbackPath)
     }
   }
 
   return (
     <Button
-      variant="outline"
+      variant="ghost"
+      size="sm"
       onClick={handleBack}
-      className={cn("border-primary text-primary hover:bg-primary hover:text-white", className)}
+      className={cn("flex items-center space-x-2 text-muted-foreground hover:text-foreground", className)}
     >
-      <ArrowLeft className="mr-2 h-4 w-4" />
-      {children || "Back"}
+      <ArrowLeft className="h-4 w-4" />
+      <span>Back</span>
     </Button>
   )
 }
