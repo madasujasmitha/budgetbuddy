@@ -25,27 +25,6 @@ export default function LoginPage() {
     remember: false,
   })
 
-  // Create prototype user data
-  const createPrototypeUser = () => {
-    return {
-      id: "prototype_user_001",
-      username: "BudgetHero",
-      email: "demo@budgetbuddy.com",
-      firstName: "Budget",
-      lastName: "Hero",
-      level: 5,
-      xp: 1250,
-      coins: 850,
-      totalSaved: 2500,
-      goalsCompleted: 3,
-      joinDate: new Date().toISOString(),
-      avatar: "hero",
-      achievements: ["first_save", "goal_crusher", "money_master"],
-      currentStreak: 7,
-      isPrototype: true,
-    }
-  }
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
     setFormData((prev) => ({
@@ -72,25 +51,18 @@ export default function LoginPage() {
       // Simulate login process
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      // Create prototype user for demo
-      const prototypeUser = createPrototypeUser()
-
-      // Store user data safely
+      // For demo purposes, simulate successful login
       if (typeof window !== "undefined") {
         localStorage.setItem("budgetbuddy_logged_in", "true")
-        localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
         localStorage.setItem(
-          "budgetbuddy_session",
+          "budgetbuddy_user",
           JSON.stringify({
-            loginTime: new Date().toISOString(),
-            sessionId: `session_${Date.now()}`,
-            remember: formData.remember,
-            loginMethod: "dedicated_login",
+            username: formData.email.split("@")[0] || "demo_user",
+            email: formData.email,
           }),
         )
       }
 
-      // Navigate to dashboard
       router.push("/dashboard")
     } catch (error) {
       console.error("Login error:", error)

@@ -1,162 +1,173 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Briefcase, MapPin, Clock, DollarSign, ChevronRight } from "lucide-react"
+import { Briefcase, ExternalLink, Star, MapPin, DollarSign, Clock, Target } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+// Sample job data
+const jobs = [
+  {
+    id: 1,
+    title: "Dog Walker",
+    pay: "$15/hr",
+    location: "2 miles away",
+    difficulty: "Easy",
+    time: "2-3 hrs",
+    xp: 75,
+    matchesGoal: "Nike Air Jordans",
+    matchScore: 85,
+  },
+  {
+    id: 2,
+    title: "Lawn Mowing",
+    pay: "$25/job",
+    location: "0.5 miles away",
+    difficulty: "Medium",
+    time: "1-2 hrs",
+    xp: 100,
+    matchesGoal: "Nike Air Jordans",
+    matchScore: 95,
+  },
+  {
+    id: 3,
+    title: "Junior Web Designer",
+    pay: "$18/hr",
+    location: "Remote",
+    difficulty: "Hard",
+    time: "5-10 hrs",
+    xp: 150,
+    matchesGoal: "Gaming Console",
+    matchScore: 75,
+  },
+]
 
 export function JobQuests() {
-  const jobQuests = [
-    {
-      id: 1,
-      title: "Dog Walker",
-      company: "Neighborhood",
-      location: "Local Area",
-      pay: "$15/hour",
-      difficulty: "Easy",
-      timeCommitment: "2-3 hours",
-      skills: ["Responsibility", "Animal Care"],
-      description: "Walk dogs for busy neighbors",
-      available: true,
-    },
-    {
-      id: 2,
-      title: "Lawn Mowing",
-      company: "Various Homes",
-      location: "Your Street",
-      pay: "$25/lawn",
-      difficulty: "Medium",
-      timeCommitment: "1-2 hours",
-      skills: ["Physical Work", "Equipment Use"],
-      description: "Mow lawns for elderly neighbors",
-      available: true,
-    },
-    {
-      id: 3,
-      title: "Tutoring Helper",
-      company: "Local Library",
-      location: "Downtown Library",
-      pay: "$12/hour",
-      difficulty: "Medium",
-      timeCommitment: "3-4 hours",
-      skills: ["Teaching", "Patience", "Math"],
-      description: "Help younger kids with homework",
-      available: false,
-      requirement: "Need Math Skill Level 3",
-    },
-  ]
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy":
-        return "bg-green-100 text-green-800"
-      case "Medium":
-        return "bg-yellow-100 text-yellow-800"
-      case "Hard":
-        return "bg-red-100 text-red-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
-
   return (
-    <Card className="border-2 border-primary/20">
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center">
-            <Briefcase className="mr-2 h-5 w-5 text-primary" />
-            Job Quests
-            <Badge variant="secondary" className="ml-2">
-              {jobQuests.filter((j) => j.available).length} Available
-            </Badge>
-          </CardTitle>
-          <Button variant="outline" size="sm">
-            Browse All
-            <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
+    <Card className="overflow-hidden border-2 border-primary/20">
+      <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 pb-2">
+        <div className="flex items-center space-x-2">
+          <Briefcase className="h-5 w-5 text-primary" />
+          <CardTitle className="text-base">Job Quests</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-3">
-          {jobQuests.map((job) => (
-            <div
-              key={job.id}
-              className={`p-3 rounded-lg border transition-colors ${
-                job.available
-                  ? "border-green-200 bg-green-50 hover:bg-green-100 cursor-pointer"
-                  : "border-gray-200 bg-gray-50"
-              }`}
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <h4 className="font-medium text-sm">{job.title}</h4>
-                    <Badge className={getDifficultyColor(job.difficulty)}>{job.difficulty}</Badge>
-                    {!job.available && (
-                      <Badge variant="outline" className="text-xs">
-                        Locked
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-2">{job.description}</p>
+      <CardContent className="p-4">
+        <Tabs defaultValue="goal-matched">
+          <TabsList className="w-full mb-4">
+            <TabsTrigger value="goal-matched" className="flex-1">
+              Goal Matched
+            </TabsTrigger>
+            <TabsTrigger value="all-jobs" className="flex-1">
+              All Jobs
+            </TabsTrigger>
+          </TabsList>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="flex items-center">
-                      <MapPin className="mr-1 h-3 w-3 text-muted-foreground" />
-                      <span>{job.location}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <DollarSign className="mr-1 h-3 w-3 text-muted-foreground" />
-                      <span>{job.pay}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="mr-1 h-3 w-3 text-muted-foreground" />
-                      <span>{job.timeCommitment}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Briefcase className="mr-1 h-3 w-3 text-muted-foreground" />
-                      <span>{job.company}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-2">
-                    <p className="text-xs text-muted-foreground mb-1">Required Skills:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {job.skills.map((skill, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  {!job.available && job.requirement && (
-                    <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
-                      <p className="text-xs text-yellow-800">{job.requirement}</p>
-                    </div>
-                  )}
-                </div>
+          <TabsContent value="goal-matched">
+            <div className="rounded-lg bg-gradient-to-r from-secondary/20 to-primary/20 p-3 mb-3">
+              <div className="flex items-center">
+                <Target className="h-4 w-4 mr-2 text-primary" />
+                <span className="text-sm font-medium">Jobs to help you get Nike Air Jordans faster!</span>
               </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                You need $65 more. These jobs can help you reach your goal!
+              </p>
+            </div>
 
-              {job.available && (
-                <div className="mt-3 pt-2 border-t border-green-200">
-                  <Button size="sm" className="w-full">
-                    Apply for Quest
+            <div className="space-y-3">
+              {jobs
+                .filter((job) => job.matchesGoal === "Nike Air Jordans")
+                .map((job) => (
+                  <div key={job.id} className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                    <div className="flex justify-between">
+                      <h3 className="font-bold">{job.title}</h3>
+                      <Badge className="bg-secondary">{job.pay}</Badge>
+                    </div>
+
+                    <div className="mt-2 grid grid-cols-2 gap-1 text-xs text-muted-foreground">
+                      <div className="flex items-center">
+                        <MapPin className="mr-1 h-3 w-3" />
+                        {job.location}
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="mr-1 h-3 w-3" />
+                        {job.time}
+                      </div>
+                      <div className="flex items-center">
+                        <Star className="mr-1 h-3 w-3" />
+                        {job.difficulty}
+                      </div>
+                      <div className="flex items-center">
+                        <DollarSign className="mr-1 h-3 w-3" />+{job.xp} XP
+                      </div>
+                    </div>
+
+                    <div className="mt-2 bg-secondary/20 rounded-lg p-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-medium">Goal match:</span>
+                        <span className="font-bold">{job.matchScore}%</span>
+                      </div>
+                      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/50">
+                        <div className="h-full bg-secondary" style={{ width: `${job.matchScore}%` }} />
+                      </div>
+                      <p className="text-xs mt-1">
+                        {job.title === "Lawn Mowing"
+                          ? "Just 3 jobs will complete your goal!"
+                          : job.title === "Dog Walker"
+                            ? "About 5 hours will complete your goal!"
+                            : "This job will help you reach your goal."}
+                      </p>
+                    </div>
+
+                    <Button variant="outline" size="sm" className="mt-2 h-7 w-full text-xs">
+                      View Quest
+                      <ExternalLink className="ml-1 h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="all-jobs">
+            <div className="space-y-3">
+              {jobs.map((job) => (
+                <div key={job.id} className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                  <div className="flex justify-between">
+                    <h3 className="font-bold">{job.title}</h3>
+                    <Badge className="bg-secondary">{job.pay}</Badge>
+                  </div>
+
+                  <div className="mt-2 grid grid-cols-2 gap-1 text-xs text-muted-foreground">
+                    <div className="flex items-center">
+                      <MapPin className="mr-1 h-3 w-3" />
+                      {job.location}
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="mr-1 h-3 w-3" />
+                      {job.time}
+                    </div>
+                    <div className="flex items-center">
+                      <Star className="mr-1 h-3 w-3" />
+                      {job.difficulty}
+                    </div>
+                    <div className="flex items-center">
+                      <DollarSign className="mr-1 h-3 w-3" />+{job.xp} XP
+                    </div>
+                  </div>
+
+                  <Button variant="outline" size="sm" className="mt-2 h-7 w-full text-xs">
+                    View Quest
+                    <ExternalLink className="ml-1 h-3 w-3" />
                   </Button>
                 </div>
-              )}
+              ))}
             </div>
-          ))}
-        </div>
+          </TabsContent>
+        </Tabs>
 
-        <div className="mt-4 pt-4 border-t">
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground mb-2">Complete quests to earn money and XP!</p>
-            <Button variant="outline" size="sm">
-              View Job Board
-            </Button>
-          </div>
-        </div>
+        <Button variant="secondary" size="sm" className="w-full text-xs mt-3">
+          Discover More Quests
+        </Button>
       </CardContent>
     </Card>
   )
