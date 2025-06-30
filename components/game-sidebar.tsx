@@ -19,7 +19,7 @@ import {
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import {
   Sidebar,
@@ -38,7 +38,33 @@ export function GameSidebar() {
   const pathname = usePathname()
   const [xp, setXp] = useState(750)
   const [level, setLevel] = useState(5)
+  const [userInfo, setUserInfo] = useState({
+    username: "Jamie Doe",
+    initials: "JD",
+  })
   const maxXp = 1000
+
+  useEffect(() => {
+    // Load user data from localStorage
+    if (typeof window !== "undefined") {
+      try {
+        const userData = localStorage.getItem("budgetbuddy_user")
+        if (userData) {
+          const user = JSON.parse(userData)
+          if (user && typeof user === "object") {
+            setXp(user.xp || 750)
+            setLevel(user.level || 5)
+            setUserInfo({
+              username: user.username || "Jamie Doe",
+              initials: user.username ? user.username.substring(0, 2).toUpperCase() : "JD",
+            })
+          }
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error)
+      }
+    }
+  }, [])
 
   const menuItems = [
     {
@@ -99,8 +125,13 @@ export function GameSidebar() {
   ]
 
   const handleLogout = () => {
-    // In a real app, you would implement logout logic here
-    window.location.href = "/"
+    // Clear all stored data
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("budgetbuddy_logged_in")
+      localStorage.removeItem("budgetbuddy_user")
+      localStorage.removeItem("budgetbuddy_session")
+      window.location.href = "/"
+    }
   }
 
   return (
@@ -158,11 +189,11 @@ export function GameSidebar() {
             <div className="flex items-center">
               <Avatar className="h-10 w-10 border-2 border-secondary">
                 <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                <AvatarFallback className="bg-primary text-white">JD</AvatarFallback>
+                <AvatarFallback className="bg-primary text-white">{userInfo.initials}</AvatarFallback>
               </Avatar>
               <div className="ml-2">
                 <div className="flex items-center">
-                  <p className="text-sm font-medium">Jamie Doe</p>
+                  <p className="text-sm font-medium">{userInfo.username}</p>
                   <div className="ml-2 rounded-full bg-primary/20 px-2 py-0.5 text-xs font-bold text-primary">
                     Lvl {level}
                   </div>

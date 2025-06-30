@@ -37,22 +37,22 @@ export default function RegisterPage() {
   }, [])
 
   // Create safe user object without Object.entries
-  const createSafeUser = (userData: any) => {
-    const safeUser = {
-      id: userData.id || "user_" + Date.now(),
-      username: userData.username || "BudgetHero",
-      email: userData.email || "demo@budgetbuddy.com",
-      firstName: userData.firstName || "Budget",
-      lastName: userData.lastName || "Hero",
-      level: userData.level || 1,
-      xp: userData.xp || 0,
-      coins: userData.coins || 100,
-      totalSaved: userData.totalSaved || 0,
-      goalsCompleted: userData.goalsCompleted || 0,
-      joinDate: userData.joinDate || new Date().toISOString(),
-      avatar: userData.avatar || "starter",
-      achievements: userData.achievements || ["welcome_aboard"],
-      currentStreak: userData.currentStreak || 0,
+  const createSafeUser = (userData: Record<string, any>) => {
+    const defaultUser = {
+      id: "user_" + Date.now(),
+      username: "BudgetHero",
+      email: "demo@budgetbuddy.com",
+      firstName: "Budget",
+      lastName: "Hero",
+      level: 1,
+      xp: 0,
+      coins: 100,
+      totalSaved: 0,
+      goalsCompleted: 0,
+      joinDate: new Date().toISOString(),
+      avatar: "starter",
+      achievements: ["welcome_aboard"],
+      currentStreak: 0,
       isPrototype: true,
       isNewUser: true,
       stats: {
@@ -68,47 +68,29 @@ export default function RegisterPage() {
       },
     }
 
-    // Ensure all values are not null or undefined
-    const cleanUser = {}
-    const keys = [
-      "id",
-      "username",
-      "email",
-      "firstName",
-      "lastName",
-      "level",
-      "xp",
-      "coins",
-      "totalSaved",
-      "goalsCompleted",
-      "joinDate",
-      "avatar",
-      "achievements",
-      "currentStreak",
-      "isPrototype",
-      "isNewUser",
-      "stats",
-      "preferences",
-    ]
+    // Safely merge user data
+    const safeUser = { ...defaultUser }
 
-    keys.forEach((key) => {
-      if (safeUser[key] !== null && safeUser[key] !== undefined) {
-        cleanUser[key] = safeUser[key]
-      } else {
-        // Provide safe defaults
-        if (key === "achievements") {
-          cleanUser[key] = []
-        } else if (typeof safeUser[key] === "number") {
-          cleanUser[key] = 0
-        } else if (typeof safeUser[key] === "object") {
-          cleanUser[key] = {}
-        } else {
-          cleanUser[key] = ""
-        }
-      }
-    })
+    if (userData && typeof userData === "object") {
+      if (userData.id) safeUser.id = userData.id
+      if (userData.username) safeUser.username = userData.username
+      if (userData.email) safeUser.email = userData.email
+      if (userData.firstName) safeUser.firstName = userData.firstName
+      if (userData.lastName) safeUser.lastName = userData.lastName
+      if (typeof userData.level === "number") safeUser.level = userData.level
+      if (typeof userData.xp === "number") safeUser.xp = userData.xp
+      if (typeof userData.coins === "number") safeUser.coins = userData.coins
+      if (typeof userData.totalSaved === "number") safeUser.totalSaved = userData.totalSaved
+      if (typeof userData.goalsCompleted === "number") safeUser.goalsCompleted = userData.goalsCompleted
+      if (userData.joinDate) safeUser.joinDate = userData.joinDate
+      if (userData.avatar) safeUser.avatar = userData.avatar
+      if (Array.isArray(userData.achievements)) safeUser.achievements = userData.achievements
+      if (typeof userData.currentStreak === "number") safeUser.currentStreak = userData.currentStreak
+      if (userData.isNewUser) safeUser.isNewUser = userData.isNewUser
+      if (userData.quickStart) safeUser.quickStart = userData.quickStart
+    }
 
-    return cleanUser
+    return safeUser
   }
 
   // Password strength calculation
@@ -133,10 +115,15 @@ export default function RegisterPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }))
+    setFormData((prev) => {
+      const newData = { ...prev }
+      if (type === "checkbox") {
+        newData[name] = checked
+      } else {
+        newData[name] = value
+      }
+      return newData
+    })
     // Clear error when user starts typing
     if (error) setError("")
   }
@@ -371,7 +358,13 @@ export default function RegisterPage() {
                     id="terms"
                     name="terms"
                     checked={formData.terms}
-                    onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, terms: checked as boolean }))}
+                    onCheckedChange={(checked) =>
+                      setFormData((prev) => {
+                        const newData = { ...prev }
+                        newData.terms = checked as boolean
+                        return newData
+                      })
+                    }
                     disabled={isLoading}
                     required
                   />
@@ -392,7 +385,13 @@ export default function RegisterPage() {
                     id="newsletter"
                     name="newsletter"
                     checked={formData.newsletter}
-                    onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, newsletter: checked as boolean }))}
+                    onCheckedChange={(checked) =>
+                      setFormData((prev) => {
+                        const newData = { ...prev }
+                        newData.newsletter = checked as boolean
+                        return newData
+                      })
+                    }
                     disabled={isLoading}
                   />
                   <Label htmlFor="newsletter" className="text-sm font-normal">

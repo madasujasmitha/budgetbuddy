@@ -46,37 +46,47 @@ export default function LandingPage() {
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
-    setLoginData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }))
+    setLoginData((prev) => {
+      const newData = { ...prev }
+      if (type === "checkbox") {
+        newData[name] = checked
+      } else {
+        newData[name] = value
+      }
+      return newData
+    })
   }
 
   const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
-    setRegisterData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }))
+    setRegisterData((prev) => {
+      const newData = { ...prev }
+      if (type === "checkbox") {
+        newData[name] = checked
+      } else {
+        newData[name] = value
+      }
+      return newData
+    })
   }
 
   // Create safe user object without Object.entries
-  const createSafeUser = (userData: any) => {
-    const safeUser = {
-      id: userData.id || "user_" + Date.now(),
-      username: userData.username || "BudgetHero",
-      email: userData.email || "demo@budgetbuddy.com",
-      firstName: userData.firstName || "Budget",
-      lastName: userData.lastName || "Hero",
-      level: userData.level || 1,
-      xp: userData.xp || 0,
-      coins: userData.coins || 100,
-      totalSaved: userData.totalSaved || 0,
-      goalsCompleted: userData.goalsCompleted || 0,
-      joinDate: userData.joinDate || new Date().toISOString(),
-      avatar: userData.avatar || "starter",
-      achievements: userData.achievements || ["welcome_aboard"],
-      currentStreak: userData.currentStreak || 0,
+  const createSafeUser = (userData: Record<string, any>) => {
+    const defaultUser = {
+      id: "user_" + Date.now(),
+      username: "BudgetHero",
+      email: "demo@budgetbuddy.com",
+      firstName: "Budget",
+      lastName: "Hero",
+      level: 1,
+      xp: 0,
+      coins: 100,
+      totalSaved: 0,
+      goalsCompleted: 0,
+      joinDate: new Date().toISOString(),
+      avatar: "starter",
+      achievements: ["welcome_aboard"],
+      currentStreak: 0,
       isPrototype: true,
       stats: {
         totalTransactions: 0,
@@ -91,46 +101,29 @@ export default function LandingPage() {
       },
     }
 
-    // Ensure all values are not null or undefined
-    const cleanUser = {}
-    const keys = [
-      "id",
-      "username",
-      "email",
-      "firstName",
-      "lastName",
-      "level",
-      "xp",
-      "coins",
-      "totalSaved",
-      "goalsCompleted",
-      "joinDate",
-      "avatar",
-      "achievements",
-      "currentStreak",
-      "isPrototype",
-      "stats",
-      "preferences",
-    ]
+    // Safely merge user data
+    const safeUser = { ...defaultUser }
 
-    keys.forEach((key) => {
-      if (safeUser[key] !== null && safeUser[key] !== undefined) {
-        cleanUser[key] = safeUser[key]
-      } else {
-        // Provide safe defaults
-        if (key === "achievements") {
-          cleanUser[key] = []
-        } else if (typeof safeUser[key] === "number") {
-          cleanUser[key] = 0
-        } else if (typeof safeUser[key] === "object") {
-          cleanUser[key] = {}
-        } else {
-          cleanUser[key] = ""
-        }
-      }
-    })
+    if (userData && typeof userData === "object") {
+      if (userData.id) safeUser.id = userData.id
+      if (userData.username) safeUser.username = userData.username
+      if (userData.email) safeUser.email = userData.email
+      if (userData.firstName) safeUser.firstName = userData.firstName
+      if (userData.lastName) safeUser.lastName = userData.lastName
+      if (typeof userData.level === "number") safeUser.level = userData.level
+      if (typeof userData.xp === "number") safeUser.xp = userData.xp
+      if (typeof userData.coins === "number") safeUser.coins = userData.coins
+      if (typeof userData.totalSaved === "number") safeUser.totalSaved = userData.totalSaved
+      if (typeof userData.goalsCompleted === "number") safeUser.goalsCompleted = userData.goalsCompleted
+      if (userData.joinDate) safeUser.joinDate = userData.joinDate
+      if (userData.avatar) safeUser.avatar = userData.avatar
+      if (Array.isArray(userData.achievements)) safeUser.achievements = userData.achievements
+      if (typeof userData.currentStreak === "number") safeUser.currentStreak = userData.currentStreak
+      if (userData.isNewUser) safeUser.isNewUser = userData.isNewUser
+      if (userData.quickStart) safeUser.quickStart = userData.quickStart
+    }
 
-    return cleanUser
+    return safeUser
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -412,7 +405,11 @@ export default function LandingPage() {
                         name="remember"
                         checked={loginData.remember}
                         onCheckedChange={(checked) =>
-                          setLoginData((prev) => ({ ...prev, remember: checked as boolean }))
+                          setLoginData((prev) => {
+                            const newData = { ...prev }
+                            newData.remember = checked as boolean
+                            return newData
+                          })
                         }
                       />
                       <Label htmlFor="remember" className="text-sm font-normal">
@@ -479,7 +476,11 @@ export default function LandingPage() {
                         name="terms"
                         checked={registerData.terms}
                         onCheckedChange={(checked) =>
-                          setRegisterData((prev) => ({ ...prev, terms: checked as boolean }))
+                          setRegisterData((prev) => {
+                            const newData = { ...prev }
+                            newData.terms = checked as boolean
+                            return newData
+                          })
                         }
                         required
                       />
