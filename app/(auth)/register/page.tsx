@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff, DollarSign, Check } from "lucide-react"
@@ -17,6 +17,7 @@ import { BackButton } from "@/components/ui/back-button"
 
 export default function RegisterPage() {
   const router = useRouter()
+  const [isClient, setIsClient] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -30,8 +31,89 @@ export default function RegisterPage() {
     newsletter: true,
   })
 
+  // Ensure client-side rendering
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // Create safe user object without Object.entries
+  const createSafeUser = (userData: any) => {
+    const safeUser = {
+      id: userData.id || "user_" + Date.now(),
+      username: userData.username || "BudgetHero",
+      email: userData.email || "demo@budgetbuddy.com",
+      firstName: userData.firstName || "Budget",
+      lastName: userData.lastName || "Hero",
+      level: userData.level || 1,
+      xp: userData.xp || 0,
+      coins: userData.coins || 100,
+      totalSaved: userData.totalSaved || 0,
+      goalsCompleted: userData.goalsCompleted || 0,
+      joinDate: userData.joinDate || new Date().toISOString(),
+      avatar: userData.avatar || "starter",
+      achievements: userData.achievements || ["welcome_aboard"],
+      currentStreak: userData.currentStreak || 0,
+      isPrototype: true,
+      isNewUser: true,
+      stats: {
+        totalTransactions: 0,
+        savingsRate: 0,
+        budgetAccuracy: 0,
+        goalCompletionRate: 0,
+      },
+      preferences: {
+        theme: "light",
+        notifications: true,
+        currency: "USD",
+      },
+    }
+
+    // Ensure all values are not null or undefined
+    const cleanUser = {}
+    const keys = [
+      "id",
+      "username",
+      "email",
+      "firstName",
+      "lastName",
+      "level",
+      "xp",
+      "coins",
+      "totalSaved",
+      "goalsCompleted",
+      "joinDate",
+      "avatar",
+      "achievements",
+      "currentStreak",
+      "isPrototype",
+      "isNewUser",
+      "stats",
+      "preferences",
+    ]
+
+    keys.forEach((key) => {
+      if (safeUser[key] !== null && safeUser[key] !== undefined) {
+        cleanUser[key] = safeUser[key]
+      } else {
+        // Provide safe defaults
+        if (key === "achievements") {
+          cleanUser[key] = []
+        } else if (typeof safeUser[key] === "number") {
+          cleanUser[key] = 0
+        } else if (typeof safeUser[key] === "object") {
+          cleanUser[key] = {}
+        } else {
+          cleanUser[key] = ""
+        }
+      }
+    })
+
+    return cleanUser
+  }
+
   // Password strength calculation
   const getPasswordStrength = (password: string) => {
+    if (!password) return 0
     let strength = 0
     if (password.length >= 8) strength += 25
     if (/[A-Z]/.test(password)) strength += 25
@@ -61,6 +143,8 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!isClient) return
+
     setIsLoading(true)
     setError("")
 
@@ -101,25 +185,52 @@ export default function RegisterPage() {
       // Simulate registration process
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
-      // Store user data and redirect to onboarding
-      if (typeof window !== "undefined") {
-        localStorage.setItem("budgetbuddy_logged_in", "true")
-        localStorage.setItem(
-          "budgetbuddy_user",
-          JSON.stringify({
-            username: formData.username,
-            email: formData.email,
-          }),
-        )
-      }
+      // Create safe user data
+      const userData = createSafeUser({
+        username: formData.username,
+        email: formData.email,
+      })
 
-      router.push("/onboarding")
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("budgetbuddy_logged_in", "true")
+          localStorage.setItem("budgetbuddy_user", JSON.stringify(userData))
+          localStorage.setItem(
+            "budgetbuddy_session",
+            JSON.stringify({
+              loginTime: new Date().toISOString(),
+              sessionId: `session_${Date.now()}`,
+              isNewUser: true,
+              newsletter: formData.newsletter,
+              registrationMethod: "dedicated_register",
+            }),
+          )
+
+          // Force navigation
+          window.location.href = "/onboarding"
+        } catch (storageError) {
+          console.error("Storage error:", storageError)
+          setError("Unable to save registration data. Please try again.")
+        }
+      }
     } catch (error) {
       console.error("Registration error:", error)
       setError("Registration failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // Don't render until client-side
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-primary/5 to-accent/5 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
