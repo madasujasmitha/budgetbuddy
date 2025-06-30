@@ -30,52 +30,8 @@ export default function RegisterPage() {
     newsletter: true,
   })
 
-  // Create prototype user data with safe defaults
-  const createPrototypeUser = (username: string, email: string) => {
-    const userData = {
-      id: "prototype_user_001",
-      username: username || "BudgetHero",
-      email: email || "demo@budgetbuddy.com",
-      firstName: "Budget",
-      lastName: "Hero",
-      level: 1,
-      xp: 0,
-      coins: 100,
-      totalSaved: 0,
-      goalsCompleted: 0,
-      joinDate: new Date().toISOString(),
-      avatar: "starter",
-      achievements: ["welcome_aboard"],
-      currentStreak: 0,
-      isPrototype: true,
-      isNewUser: true,
-      stats: {
-        totalTransactions: 0,
-        savingsRate: 0,
-        budgetAccuracy: 0,
-        goalCompletionRate: 0,
-      },
-      preferences: {
-        theme: "light",
-        notifications: true,
-        currency: "USD",
-      },
-    }
-
-    // Ensure safe object creation - prevent Object.entries errors
-    const safeUserData = {}
-    for (const key in userData) {
-      if (userData.hasOwnProperty(key)) {
-        safeUserData[key] = userData[key] !== null && userData[key] !== undefined ? userData[key] : ""
-      }
-    }
-
-    return safeUserData
-  }
-
   // Password strength calculation
   const getPasswordStrength = (password: string) => {
-    if (!password) return 0
     let strength = 0
     if (password.length >= 8) strength += 25
     if (/[A-Z]/.test(password)) strength += 25
@@ -145,34 +101,19 @@ export default function RegisterPage() {
       // Simulate registration process
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
-      // Create prototype user for demo
-      const prototypeUser = createPrototypeUser(formData.username, formData.email)
-
-      // Store user data safely with error handling
+      // Store user data and redirect to onboarding
       if (typeof window !== "undefined") {
-        try {
-          localStorage.setItem("budgetbuddy_logged_in", "true")
-          localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
-          localStorage.setItem(
-            "budgetbuddy_session",
-            JSON.stringify({
-              loginTime: new Date().toISOString(),
-              sessionId: `session_${Date.now()}`,
-              isNewUser: true,
-              newsletter: formData.newsletter,
-              registrationMethod: "dedicated_register",
-            }),
-          )
-        } catch (storageError) {
-          console.error("Storage error:", storageError)
-          setError("Unable to save registration data. Please try again.")
-          setIsLoading(false)
-          return
-        }
+        localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem(
+          "budgetbuddy_user",
+          JSON.stringify({
+            username: formData.username,
+            email: formData.email,
+          }),
+        )
       }
 
-      // Force navigation to dashboard
-      window.location.href = "/dashboard"
+      router.push("/onboarding")
     } catch (error) {
       console.error("Registration error:", error)
       setError("Registration failed. Please try again.")
