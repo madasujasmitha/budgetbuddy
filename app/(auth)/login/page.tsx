@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff, DollarSign } from "lucide-react"
@@ -16,7 +16,6 @@ import { BackButton } from "@/components/ui/back-button"
 
 export default function LoginPage() {
   const router = useRouter()
-  const [isClient, setIsClient] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
@@ -26,15 +25,10 @@ export default function LoginPage() {
     remember: false,
   })
 
-  // Ensure client-side rendering
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  // Create safe user object without Object.entries
-  const createSafeUser = (userData: Record<string, any>) => {
-    const defaultUser = {
-      id: "user_" + Date.now(),
+  // Create prototype user data
+  const createPrototypeUser = () => {
+    return {
+      id: "prototype_user_001",
       username: "BudgetHero",
       email: "demo@budgetbuddy.com",
       firstName: "Budget",
@@ -49,61 +43,21 @@ export default function LoginPage() {
       achievements: ["first_save", "goal_crusher", "money_master"],
       currentStreak: 7,
       isPrototype: true,
-      stats: {
-        totalTransactions: 45,
-        savingsRate: 0.25,
-        budgetAccuracy: 0.85,
-        goalCompletionRate: 0.75,
-      },
-      preferences: {
-        theme: "light",
-        notifications: true,
-        currency: "USD",
-      },
     }
-
-    // Safely merge user data
-    const safeUser = { ...defaultUser }
-
-    if (userData && typeof userData === "object") {
-      if (userData.id) safeUser.id = userData.id
-      if (userData.username) safeUser.username = userData.username
-      if (userData.email) safeUser.email = userData.email
-      if (userData.firstName) safeUser.firstName = userData.firstName
-      if (userData.lastName) safeUser.lastName = userData.lastName
-      if (typeof userData.level === "number") safeUser.level = userData.level
-      if (typeof userData.xp === "number") safeUser.xp = userData.xp
-      if (typeof userData.coins === "number") safeUser.coins = userData.coins
-      if (typeof userData.totalSaved === "number") safeUser.totalSaved = userData.totalSaved
-      if (typeof userData.goalsCompleted === "number") safeUser.goalsCompleted = userData.goalsCompleted
-      if (userData.joinDate) safeUser.joinDate = userData.joinDate
-      if (userData.avatar) safeUser.avatar = userData.avatar
-      if (Array.isArray(userData.achievements)) safeUser.achievements = userData.achievements
-      if (typeof userData.currentStreak === "number") safeUser.currentStreak = userData.currentStreak
-    }
-
-    return safeUser
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
-    setFormData((prev) => {
-      const newData = { ...prev }
-      if (type === "checkbox") {
-        newData[name] = checked
-      } else {
-        newData[name] = value
-      }
-      return newData
-    })
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }))
     // Clear error when user starts typing
     if (error) setError("")
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isClient) return
-
     setIsLoading(true)
     setError("")
 
@@ -118,51 +72,32 @@ export default function LoginPage() {
       // Simulate login process
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      // Create safe user data
-      const userData = createSafeUser({
-        username: formData.email.split("@")[0] || "demo_user",
-        email: formData.email,
-      })
+      // Create prototype user for demo
+      const prototypeUser = createPrototypeUser()
 
+      // Store user data safely
       if (typeof window !== "undefined") {
-        try {
-          localStorage.setItem("budgetbuddy_logged_in", "true")
-          localStorage.setItem("budgetbuddy_user", JSON.stringify(userData))
-          localStorage.setItem(
-            "budgetbuddy_session",
-            JSON.stringify({
-              loginTime: new Date().toISOString(),
-              sessionId: `session_${Date.now()}`,
-              remember: formData.remember,
-              loginMethod: "dedicated_login",
-            }),
-          )
-
-          // Force navigation
-          window.location.href = "/dashboard"
-        } catch (storageError) {
-          console.error("Storage error:", storageError)
-          setError("Unable to save login data. Please try again.")
-        }
+        localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
+        localStorage.setItem(
+          "budgetbuddy_session",
+          JSON.stringify({
+            loginTime: new Date().toISOString(),
+            sessionId: `session_${Date.now()}`,
+            remember: formData.remember,
+            loginMethod: "dedicated_login",
+          }),
+        )
       }
+
+      // Navigate to dashboard
+      router.push("/dashboard")
     } catch (error) {
       console.error("Login error:", error)
       setError("Login failed. Please check your credentials and try again.")
     } finally {
       setIsLoading(false)
     }
-  }
-
-  // Don't render until client-side
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-primary/5 to-accent/5 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -240,13 +175,7 @@ export default function LoginPage() {
                   id="remember"
                   name="remember"
                   checked={formData.remember}
-                  onCheckedChange={(checked) =>
-                    setFormData((prev) => {
-                      const newData = { ...prev }
-                      newData.remember = checked as boolean
-                      return newData
-                    })
-                  }
+                  onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, remember: checked as boolean }))}
                   disabled={isLoading}
                 />
                 <Label htmlFor="remember" className="text-sm font-normal">

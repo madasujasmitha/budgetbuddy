@@ -55,7 +55,7 @@ export default function AboutPage() {
               <div className="flex justify-center">
                 <div className="w-80 h-80 relative">
                   <img
-                    src="https://media.licdn.com/dms/image/v2/D4E03AQH-T6HqNkGjbA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1732071513712?e=1756944000&v=beta&t=zwCAPcFW_DDVUFZtZRlLO5ExHkABsJYVFJmZFAC2wmA"
+                    src="/placeholder.svg?height=320&width=320"
                     alt="Financial education and mentoring"
                     className="w-full h-full object-cover rounded-lg shadow-lg"
                   />

@@ -29,10 +29,10 @@ export function BackButton({ className, href, children }: BackButtonProps) {
       variant="ghost"
       size="sm"
       onClick={handleBack}
-      className={cn("flex items-center space-x-2 text-muted-foreground hover:text-foreground", className)}
+      className={cn("flex items-center text-muted-foreground hover:text-foreground", className)}
     >
-      <ArrowLeft className="h-4 w-4" />
-      <span>{children || "Back"}</span>
+      <ArrowLeft className="mr-2 h-4 w-4" />
+      {children || "Back"}
     </Button>
   )
 }

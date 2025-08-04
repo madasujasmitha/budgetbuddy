@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff, DollarSign, Check } from "lucide-react"
@@ -17,7 +17,6 @@ import { BackButton } from "@/components/ui/back-button"
 
 export default function RegisterPage() {
   const router = useRouter()
-  const [isClient, setIsClient] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -31,17 +30,12 @@ export default function RegisterPage() {
     newsletter: true,
   })
 
-  // Ensure client-side rendering
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  // Create safe user object without Object.entries
-  const createSafeUser = (userData: Record<string, any>) => {
-    const defaultUser = {
-      id: "user_" + Date.now(),
-      username: "BudgetHero",
-      email: "demo@budgetbuddy.com",
+  // Create prototype user data
+  const createPrototypeUser = (username: string, email: string) => {
+    return {
+      id: "prototype_user_001",
+      username: username || "BudgetHero",
+      email: email || "demo@budgetbuddy.com",
       firstName: "Budget",
       lastName: "Hero",
       level: 1,
@@ -55,47 +49,11 @@ export default function RegisterPage() {
       currentStreak: 0,
       isPrototype: true,
       isNewUser: true,
-      stats: {
-        totalTransactions: 0,
-        savingsRate: 0,
-        budgetAccuracy: 0,
-        goalCompletionRate: 0,
-      },
-      preferences: {
-        theme: "light",
-        notifications: true,
-        currency: "USD",
-      },
     }
-
-    // Safely merge user data
-    const safeUser = { ...defaultUser }
-
-    if (userData && typeof userData === "object") {
-      if (userData.id) safeUser.id = userData.id
-      if (userData.username) safeUser.username = userData.username
-      if (userData.email) safeUser.email = userData.email
-      if (userData.firstName) safeUser.firstName = userData.firstName
-      if (userData.lastName) safeUser.lastName = userData.lastName
-      if (typeof userData.level === "number") safeUser.level = userData.level
-      if (typeof userData.xp === "number") safeUser.xp = userData.xp
-      if (typeof userData.coins === "number") safeUser.coins = userData.coins
-      if (typeof userData.totalSaved === "number") safeUser.totalSaved = userData.totalSaved
-      if (typeof userData.goalsCompleted === "number") safeUser.goalsCompleted = userData.goalsCompleted
-      if (userData.joinDate) safeUser.joinDate = userData.joinDate
-      if (userData.avatar) safeUser.avatar = userData.avatar
-      if (Array.isArray(userData.achievements)) safeUser.achievements = userData.achievements
-      if (typeof userData.currentStreak === "number") safeUser.currentStreak = userData.currentStreak
-      if (userData.isNewUser) safeUser.isNewUser = userData.isNewUser
-      if (userData.quickStart) safeUser.quickStart = userData.quickStart
-    }
-
-    return safeUser
   }
 
   // Password strength calculation
   const getPasswordStrength = (password: string) => {
-    if (!password) return 0
     let strength = 0
     if (password.length >= 8) strength += 25
     if (/[A-Z]/.test(password)) strength += 25
@@ -115,23 +73,16 @@ export default function RegisterPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
-    setFormData((prev) => {
-      const newData = { ...prev }
-      if (type === "checkbox") {
-        newData[name] = checked
-      } else {
-        newData[name] = value
-      }
-      return newData
-    })
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }))
     // Clear error when user starts typing
     if (error) setError("")
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isClient) return
-
     setIsLoading(true)
     setError("")
 
@@ -172,52 +123,33 @@ export default function RegisterPage() {
       // Simulate registration process
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
-      // Create safe user data
-      const userData = createSafeUser({
-        username: formData.username,
-        email: formData.email,
-      })
+      // Create prototype user for demo
+      const prototypeUser = createPrototypeUser(formData.username, formData.email)
 
+      // Store user data safely
       if (typeof window !== "undefined") {
-        try {
-          localStorage.setItem("budgetbuddy_logged_in", "true")
-          localStorage.setItem("budgetbuddy_user", JSON.stringify(userData))
-          localStorage.setItem(
-            "budgetbuddy_session",
-            JSON.stringify({
-              loginTime: new Date().toISOString(),
-              sessionId: `session_${Date.now()}`,
-              isNewUser: true,
-              newsletter: formData.newsletter,
-              registrationMethod: "dedicated_register",
-            }),
-          )
-
-          // Force navigation
-          window.location.href = "/onboarding"
-        } catch (storageError) {
-          console.error("Storage error:", storageError)
-          setError("Unable to save registration data. Please try again.")
-        }
+        localStorage.setItem("budgetbuddy_logged_in", "true")
+        localStorage.setItem("budgetbuddy_user", JSON.stringify(prototypeUser))
+        localStorage.setItem(
+          "budgetbuddy_session",
+          JSON.stringify({
+            loginTime: new Date().toISOString(),
+            sessionId: `session_${Date.now()}`,
+            isNewUser: true,
+            newsletter: formData.newsletter,
+            registrationMethod: "dedicated_register",
+          }),
+        )
       }
+
+      // Navigate to dashboard (skip onboarding for prototype)
+      router.push("/dashboard")
     } catch (error) {
       console.error("Registration error:", error)
       setError("Registration failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
-  }
-
-  // Don't render until client-side
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-primary/5 to-accent/5 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -358,13 +290,7 @@ export default function RegisterPage() {
                     id="terms"
                     name="terms"
                     checked={formData.terms}
-                    onCheckedChange={(checked) =>
-                      setFormData((prev) => {
-                        const newData = { ...prev }
-                        newData.terms = checked as boolean
-                        return newData
-                      })
-                    }
+                    onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, terms: checked as boolean }))}
                     disabled={isLoading}
                     required
                   />
@@ -385,13 +311,7 @@ export default function RegisterPage() {
                     id="newsletter"
                     name="newsletter"
                     checked={formData.newsletter}
-                    onCheckedChange={(checked) =>
-                      setFormData((prev) => {
-                        const newData = { ...prev }
-                        newData.newsletter = checked as boolean
-                        return newData
-                      })
-                    }
+                    onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, newsletter: checked as boolean }))}
                     disabled={isLoading}
                   />
                   <Label htmlFor="newsletter" className="text-sm font-normal">
