@@ -1,12 +1,16 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Clock, Plus, Minus, Target, Trophy, Coins, ChevronRight } from "lucide-react"
+import { Clock, Plus, Minus, Target, Trophy, Coins, ChevronRight } from 'lucide-react'
+import { ViewAllTransactionsModal } from "@/components/modals/view-all-transactions-modal"
 
 export function RecentAdventures() {
+  const [showAllTransactions, setShowAllTransactions] = useState(false)
+
   const adventures = [
     {
       id: 1,
@@ -56,43 +60,35 @@ export function RecentAdventures() {
       color: "text-yellow-600",
       bgColor: "bg-yellow-50",
     },
-    {
-      id: 5,
-      type: "income",
-      title: "Chore Completion",
-      description: "Cleaned garage for neighbor",
-      amount: "+$15",
-      xp: "+35 XP",
-      time: "3 days ago",
-      icon: Coins,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-    },
   ]
 
   return (
-    <Card className="border-2 border-primary/20">
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl flex items-center">
-            <Clock className="mr-2 h-6 w-6 text-primary" />
-            Recent Adventures
-          </CardTitle>
-          <Button variant="outline" size="sm">
-            View All
-            <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <ScrollArea className="h-80">
+    <>
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xl flex items-center">
+              <Clock className="mr-2 h-6 w-6 text-primary" />
+              Recent Activity
+            </CardTitle>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowAllTransactions(true)}
+            >
+              View All
+              <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
           <div className="space-y-3">
             {adventures.map((adventure) => {
               const Icon = adventure.icon
               return (
                 <div
                   key={adventure.id}
-                  className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-accent/50 transition-colors cursor-pointer"
+                  className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-accent/50 transition-colors"
                 >
                   <div className={`p-2 rounded-lg ${adventure.bgColor}`}>
                     <Icon className={`h-4 w-4 ${adventure.color}`} />
@@ -115,21 +111,12 @@ export function RecentAdventures() {
               )
             })}
           </div>
-        </ScrollArea>
+        </CardContent>
+      </Card>
 
-        <div className="mt-4 pt-4 border-t">
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" size="sm" className="w-full bg-transparent">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Income
-            </Button>
-            <Button variant="outline" size="sm" className="w-full bg-transparent">
-              <Minus className="mr-2 h-4 w-4" />
-              Track Expense
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      {showAllTransactions && (
+        <ViewAllTransactionsModal onClose={() => setShowAllTransactions(false)} />
+      )}
+    </>
   )
 }

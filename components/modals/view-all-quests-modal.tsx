@@ -1,15 +1,17 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { CheckCircle, Circle, Clock, Zap, ChevronRight } from 'lucide-react'
-import { ViewAllQuestsModal } from "@/components/modals/view-all-quests-modal"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { CheckCircle, Circle, Zap } from 'lucide-react'
 
-export function DailyQuests() {
-  const [showAllQuests, setShowAllQuests] = useState(false)
+interface ViewAllQuestsModalProps {
+  onClose: () => void
+}
+
+export function ViewAllQuestsModal({ onClose }: ViewAllQuestsModalProps) {
   const [quests, setQuests] = useState([
     {
       id: 1,
@@ -47,11 +49,34 @@ export function DailyQuests() {
       completed: false,
       difficulty: "Medium",
     },
+    {
+      id: 5,
+      title: "Save $5 Today",
+      description: "Put aside $5 towards your goals",
+      xp: 35,
+      coins: 15,
+      completed: false,
+      difficulty: "Medium",
+    },
+    {
+      id: 6,
+      title: "Compare Prices",
+      description: "Research prices before making a purchase",
+      xp: 20,
+      coins: 8,
+      completed: false,
+      difficulty: "Easy",
+    },
+    {
+      id: 7,
+      title: "Weekly Budget Review",
+      description: "Review your spending from this week",
+      xp: 50,
+      coins: 25,
+      completed: false,
+      difficulty: "Hard",
+    },
   ])
-
-  const completedQuests = quests.filter((q) => q.completed).length
-  const totalQuests = quests.length
-  const progressPercentage = (completedQuests / totalQuests) * 100
 
   const completeQuest = (questId: number) => {
     setQuests(prev => prev.map(quest => 
@@ -73,44 +98,15 @@ export function DailyQuests() {
   }
 
   return (
-    <>
-      <Card>
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center">
-              <Clock className="mr-2 h-5 w-5 text-primary" />
-              Daily Quests
-              <Badge variant="secondary" className="ml-2">
-                {completedQuests}/{totalQuests}
-              </Badge>
-            </CardTitle>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowAllQuests(true)}
-            >
-              View All
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
-          {/* Progress Overview */}
-          <div className="mb-4 p-3 bg-primary/10 rounded-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Today's Progress</span>
-              <span className="text-sm text-muted-foreground">{Math.round(progressPercentage)}% Complete</span>
-            </div>
-            <Progress value={progressPercentage} className="h-2 mb-2" />
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>Keep going! You're doing great!</span>
-              <span>+{quests.reduce((sum, q) => (q.completed ? sum + q.xp : sum), 0)} XP earned</span>
-            </div>
-          </div>
-
-          {/* Quest List */}
-          <div className="space-y-2">
-            {quests.slice(0, 3).map((quest) => (
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>All Daily Quests</DialogTitle>
+        </DialogHeader>
+        
+        <ScrollArea className="h-96">
+          <div className="space-y-3">
+            {quests.map((quest) => (
               <div
                 key={quest.id}
                 className={`p-3 rounded-lg border transition-colors ${
@@ -172,30 +168,12 @@ export function DailyQuests() {
               </div>
             ))}
           </div>
+        </ScrollArea>
 
-          {/* Completion Bonus */}
-          {completedQuests === totalQuests ? (
-            <div className="mt-4 p-3 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg">
-              <div className="text-center">
-                <div className="text-2xl mb-1">🎉</div>
-                <p className="text-sm font-medium text-green-700">All Quests Complete!</p>
-                <p className="text-xs text-green-600">Bonus: +50 XP, +25 coins</p>
-              </div>
-            </div>
-          ) : (
-            <div className="mt-4 p-3 bg-accent/10 rounded-lg">
-              <div className="text-center">
-                <p className="text-sm font-medium">Complete all quests for bonus rewards!</p>
-                <p className="text-xs text-muted-foreground">+50 XP, +25 coins waiting</p>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {showAllQuests && (
-        <ViewAllQuestsModal onClose={() => setShowAllQuests(false)} />
-      )}
-    </>
+        <div className="flex justify-end">
+          <Button onClick={onClose}>Close</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }

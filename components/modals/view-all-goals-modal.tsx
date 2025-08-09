@@ -1,17 +1,18 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Target, ChevronRight, Plus } from 'lucide-react'
-import { ViewAllGoalsModal } from "@/components/modals/view-all-goals-modal"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Target, Plus } from 'lucide-react'
 
-export function QuestProgress() {
-  const [showAllGoals, setShowAllGoals] = useState(false)
+interface ViewAllGoalsModalProps {
+  onClose: () => void
+}
 
-  const goals = [
+export function ViewAllGoalsModal({ onClose }: ViewAllGoalsModalProps) {
+  const allGoals = [
     {
       id: 1,
       title: "New Gaming Headset",
@@ -42,30 +43,51 @@ export function QuestProgress() {
       daysLeft: 180,
       color: "bg-purple-500",
     },
+    {
+      id: 4,
+      title: "New Skateboard",
+      description: "Professional skateboard setup",
+      current: 75,
+      target: 150,
+      category: "Sports",
+      daysLeft: 30,
+      color: "bg-orange-500",
+    },
+    {
+      id: 5,
+      title: "Concert Tickets",
+      description: "Favorite band coming to town",
+      current: 40,
+      target: 80,
+      category: "Entertainment",
+      daysLeft: 20,
+      color: "bg-pink-500",
+    },
+    {
+      id: 6,
+      title: "College Fund",
+      description: "Start saving for college",
+      current: 250,
+      target: 1000,
+      category: "Education",
+      daysLeft: 365,
+      color: "bg-indigo-500",
+    },
   ]
 
   return (
-    <>
-      <Card>
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center">
-              <Target className="mr-2 h-5 w-5 text-primary" />
-              Your Goals
-            </CardTitle>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowAllGoals(true)}
-            >
-              View All
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center">
+            <Target className="mr-2 h-5 w-5 text-primary" />
+            All Your Goals
+          </DialogTitle>
+        </DialogHeader>
+        
+        <ScrollArea className="h-96">
           <div className="space-y-4">
-            {goals.slice(0, 2).map((goal) => {
+            {allGoals.map((goal) => {
               const progress = (goal.current / goal.target) * 100
               const isCompleted = progress >= 100
 
@@ -102,19 +124,16 @@ export function QuestProgress() {
               )
             })}
           </div>
+        </ScrollArea>
 
-          <div className="mt-4">
-            <Button variant="outline" size="sm" className="w-full">
-              <Plus className="mr-2 h-4 w-4" />
-              Add New Goal
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {showAllGoals && (
-        <ViewAllGoalsModal onClose={() => setShowAllGoals(false)} />
-      )}
-    </>
+        <div className="flex items-center justify-between pt-4">
+          <Button variant="outline" size="sm">
+            <Plus className="mr-2 h-4 w-4" />
+            Add New Goal
+          </Button>
+          <Button onClick={onClose}>Close</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
