@@ -124,7 +124,7 @@ export default function LocalPage() {
   return (
     <div className="container mx-auto p-4 md:p-6">
       <BackButton />
-      <h1 className="text-2xl font-bold mb-6">Local Economy Explorer</h1>
+      <h1 className="text-2xl font-bold mb-6">Local Opportunities</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-1 space-y-6">
@@ -176,7 +176,7 @@ export default function LocalPage() {
             <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 pb-2">
               <CardTitle className="text-base flex items-center">
                 <Map className="mr-2 h-5 w-5 text-primary" />
-                Local Map
+                Opportunities Map
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4">
@@ -203,7 +203,7 @@ export default function LocalPage() {
           {filteredBusinesses.length === 0 ? (
             <div className="text-center py-12 bg-muted/20 rounded-lg border-2 border-dashed border-muted">
               <Store className="h-12 w-12 mx-auto text-muted-foreground" />
-              <h3 className="mt-4 text-lg font-medium">No businesses found</h3>
+              <h3 className="mt-4 text-lg font-medium">No opportunities found</h3>
               <p className="mt-1 text-muted-foreground">Try adjusting your filters or search query</p>
               <Button
                 className="mt-4"
@@ -339,7 +339,7 @@ export default function LocalPage() {
 
                   <div className="flex space-x-3 pt-2">
                     <Button className="flex-1 bg-primary hover:bg-primary/90">Get Directions</Button>
-                    <Button variant="outline" className="flex-1">
+                    <Button variant="outline" className="flex-1 bg-transparent">
                       Save to Favorites
                     </Button>
                   </div>
