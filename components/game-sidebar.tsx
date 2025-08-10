@@ -134,24 +134,14 @@ export function GameSidebar() {
       href: "/future",
     },
     {
-      title: "Local Jobs",
-      icon: Briefcase,
+      title: "Oppurtunities",
+      icon: LightBulb,
       href: "/local",
-    },
-    {
-      title: "Parent Dashboard",
-      icon: Shield,
-      href: "/parent-dashboard",
     },
     {
       title: "Eco Tracker",
       icon: Leaf,
       href: "/eco-tracker",
-    },
-    {
-      title: "Offline Mode",
-      icon: WifiOff,
-      href: "/offline",
     },
     {
       title: "Economics Explorer",
