@@ -4,16 +4,26 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Minus, Target, TrendingUp, Coins, Zap } from 'lucide-react'
+import { Plus, Minus, Target, TrendingUp, Coins, Zap } from "lucide-react"
 import { AddIncomeModal } from "@/components/modals/add-income-modal"
 import { AddExpenseModal } from "@/components/modals/add-expense-modal"
 import { SetGoalModal } from "@/components/modals/set-goal-modal"
 import { ViewProgressModal } from "@/components/modals/view-progress-modal"
 
-export function MoneyActions() {
-  const [activeModal, setActiveModal] = useState<string | null>(null)
+type ActionId = "add-income" | "track-expense" | "set-goal" | "view-progress"
 
-  const actions = [
+export function MoneyActions() {
+  const [activeModal, setActiveModal] = useState<ActionId | null>(null)
+
+  const actions: {
+    id: ActionId
+    title: string
+    description: string
+    icon: any
+    color: string
+    bgColor: string
+    reward: string
+  }[] = [
     {
       id: "add-income",
       title: "Add Income",
@@ -21,7 +31,6 @@ export function MoneyActions() {
       icon: Plus,
       color: "text-green-600",
       bgColor: "bg-green-50",
-      borderColor: "border-green-200",
       reward: "+25 XP",
     },
     {
@@ -31,7 +40,6 @@ export function MoneyActions() {
       icon: Minus,
       color: "text-red-600",
       bgColor: "bg-red-50",
-      borderColor: "border-red-200",
       reward: "+15 XP",
     },
     {
@@ -41,34 +49,24 @@ export function MoneyActions() {
       icon: Target,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
-      borderColor: "border-blue-200",
       reward: "+50 XP",
     },
     {
       id: "view-progress",
       title: "View Progress",
-      description: "Check your financial journey",
+      description: "See your trends and stats",
       icon: TrendingUp,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
-      borderColor: "border-purple-200",
       reward: "+10 XP",
     },
   ]
-
-  const handleActionClick = (actionId: string) => {
-    setActiveModal(actionId)
-  }
-
-  const closeModal = () => {
-    setActiveModal(null)
-  }
 
   return (
     <>
       <Card className="border-2 border-primary/20">
         <CardHeader className="pb-4">
-          <CardTitle className="text-xl flex items-center">
+          <CardTitle className="flex items-center text-xl">
             <Coins className="mr-2 h-6 w-6 text-primary" />
             Quick Actions
             <Badge variant="secondary" className="ml-2">
@@ -78,19 +76,17 @@ export function MoneyActions() {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {actions.map((action) => {
               const Icon = action.icon
-
               return (
                 <Card
                   key={action.id}
-                  className="cursor-pointer transition-all duration-200 hover:shadow-md border hover:border-primary/30"
-                  onClick={() => handleActionClick(action.id)}
+                  className="cursor-pointer border transition-all duration-200 hover:border-primary/30 hover:shadow-md"
                 >
                   <CardContent className="p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className={`p-2 rounded-lg ${action.bgColor}`}>
+                    <div className="mb-3 flex items-start justify-between">
+                      <div className={`rounded-lg p-2 ${action.bgColor}`}>
                         <Icon className={`h-5 w-5 ${action.color}`} />
                       </div>
                       <Badge variant="outline" className="text-xs">
@@ -98,8 +94,13 @@ export function MoneyActions() {
                       </Badge>
                     </div>
                     <div className="space-y-1">
-                      <h3 className="font-semibold text-sm">{action.title}</h3>
+                      <h3 className="text-sm font-semibold">{action.title}</h3>
                       <p className="text-xs text-muted-foreground">{action.description}</p>
+                    </div>
+                    <div className="mt-3">
+                      <Button size="sm" className="w-full" onClick={() => setActiveModal(action.id)}>
+                        Start {action.title}
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -109,15 +110,15 @@ export function MoneyActions() {
 
           {/* Quick Stats */}
           <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-            <div className="p-3 bg-green-50 rounded-lg">
+            <div className="rounded-lg bg-green-50 p-3">
               <div className="text-lg font-bold text-green-600">$2,500</div>
               <div className="text-xs text-muted-foreground">Total Saved</div>
             </div>
-            <div className="p-3 bg-blue-50 rounded-lg">
+            <div className="rounded-lg bg-blue-50 p-3">
               <div className="text-lg font-bold text-blue-600">3</div>
               <div className="text-xs text-muted-foreground">Active Goals</div>
             </div>
-            <div className="p-3 bg-purple-50 rounded-lg">
+            <div className="rounded-lg bg-purple-50 p-3">
               <div className="text-lg font-bold text-purple-600">7</div>
               <div className="text-xs text-muted-foreground">Day Streak</div>
             </div>
@@ -126,10 +127,10 @@ export function MoneyActions() {
       </Card>
 
       {/* Modals */}
-      {activeModal === "add-income" && <AddIncomeModal onClose={closeModal} />}
-      {activeModal === "track-expense" && <AddExpenseModal onClose={closeModal} />}
-      {activeModal === "set-goal" && <SetGoalModal onClose={closeModal} />}
-      {activeModal === "view-progress" && <ViewProgressModal onClose={closeModal} />}
+      {activeModal === "add-income" && <AddIncomeModal onClose={() => setActiveModal(null)} />}
+      {activeModal === "track-expense" && <AddExpenseModal onClose={() => setActiveModal(null)} />}
+      {activeModal === "set-goal" && <SetGoalModal onClose={() => setActiveModal(null)} />}
+      {activeModal === "view-progress" && <ViewProgressModal onClose={() => setActiveModal(null)} />}
     </>
   )
 }

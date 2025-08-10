@@ -12,9 +12,7 @@ import {
   Settings,
   PlusCircle,
   TrendingUp,
-  Shield,
   Leaf,
-  WifiOff,
   Globe,
   User,
   Trophy,
@@ -134,9 +132,9 @@ export function GameSidebar() {
       href: "/future",
     },
     {
-      title: "Oppurtunities",
-      icon: LightBulb,
-      href: "/local",
+      title: "Opportunities",
+      icon: Briefcase,
+      href: "/opportunities",
     },
     {
       title: "Eco Tracker",

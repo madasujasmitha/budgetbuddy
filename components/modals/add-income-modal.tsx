@@ -1,95 +1,105 @@
 "use client"
 
 import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, Coins } from 'lucide-react'
+import { useToast } from "@/hooks/use-toast"
 
-interface AddIncomeModalProps {
-  onClose: () => void
+type Props = { onClose: () => void }
+
+type Tx = {
+  id: string
+  type: "income"
+  amount: number
+  category: string
+  note?: string
+  date: string
 }
 
-export function AddIncomeModal({ onClose }: AddIncomeModalProps) {
-  const [amount, setAmount] = useState("")
-  const [source, setSource] = useState("")
-  const [description, setDescription] = useState("")
+export function AddIncomeModal({ onClose }: Props) {
+  const { toast } = useToast()
+  const [amount, setAmount] = useState<string>("")
+  const [category, setCategory] = useState<string>("allowance")
+  const [note, setNote] = useState<string>("")
+  const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10))
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Here you would typically save the income data
-    console.log("Adding income:", { amount, source, description })
+  const save = () => {
+    const value = Number.parseFloat(amount)
+    if (!value || value <= 0) return
+    const tx: Tx = {
+      id: crypto.randomUUID(),
+      type: "income",
+      amount: value,
+      category,
+      note: note.trim() || undefined,
+      date,
+    }
+    const existing = JSON.parse(localStorage.getItem("bb_transactions") || "[]")
+    existing.unshift(tx)
+    localStorage.setItem("bb_transactions", JSON.stringify(existing))
+    toast({ title: "Income added", description: `Logged $${value.toFixed(2)} (${category})` })
     onClose()
   }
 
+  // close on escape or background handled by Dialog
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center">
-            <Plus className="mr-2 h-5 w-5 text-green-600" />
-            Add Income
-          </DialogTitle>
+          <DialogTitle>Add Income</DialogTitle>
+          <DialogDescription>Log money you've earned to track your progress.</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount ($)</Label>
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="income-amount">Amount</Label>
             <Input
-              id="amount"
+              id="income-amount"
               type="number"
+              min="0"
               step="0.01"
-              placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              required
+              placeholder="e.g. 25.00"
             />
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="source">Source</Label>
-            <Select value={source} onValueChange={setSource} required>
+          <div className="grid gap-2">
+            <Label>Category</Label>
+            <Select value={category} onValueChange={setCategory}>
               <SelectTrigger>
-                <SelectValue placeholder="Select income source" />
+                <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="allowance">Allowance</SelectItem>
-                <SelectItem value="chores">Chores</SelectItem>
-                <SelectItem value="job">Part-time Job</SelectItem>
-                <SelectItem value="gift">Gift Money</SelectItem>
+                <SelectItem value="part-time">Part-time job</SelectItem>
+                <SelectItem value="gift">Gift</SelectItem>
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
+          <div className="grid gap-2">
+            <Label htmlFor="income-date">Date</Label>
+            <Input id="income-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="income-note">Note</Label>
             <Textarea
-              id="description"
-              placeholder="Add any notes about this income..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
+              id="income-note"
+              placeholder="Optional note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
             />
           </div>
-
-          <div className="flex items-center justify-between pt-4">
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Coins className="mr-1 h-4 w-4 text-yellow-600" />
-              You'll earn +25 XP
-            </div>
-            <div className="flex space-x-2">
-              <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" className="bg-green-600 hover:bg-green-700">
-                Add Income
-              </Button>
-            </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button onClick={save}>Save</Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   )
