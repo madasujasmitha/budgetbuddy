@@ -12,7 +12,9 @@ import {
   PlusCircle,
   TrendingUp,
   Newspaper,
+  Shield,
   Leaf,
+  WifiOff,
   Globe,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
@@ -50,7 +52,7 @@ export function AppSidebar() {
       href: "/goals",
     },
     {
-      title: "Opportunities",
+      title: "Jobs",
       icon: Briefcase,
       href: "/jobs",
     },
@@ -75,9 +77,19 @@ export function AppSidebar() {
       href: "/news",
     },
     {
+      title: "Parent Dashboard",
+      icon: Shield,
+      href: "/parent-dashboard",
+    },
+    {
       title: "Eco Tracker",
       icon: Leaf,
       href: "/eco-tracker",
+    },
+    {
+      title: "Offline Mode",
+      icon: WifiOff,
+      href: "/offline",
     },
     {
       title: "Economics Explorer",

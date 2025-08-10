@@ -1,93 +1,94 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useState } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useToast } from "@/hooks/use-toast"
+import { Textarea } from "@/components/ui/textarea"
+import { Plus, Coins } from 'lucide-react'
 
-type Props = { onClose?: () => void }
+interface AddIncomeModalProps {
+  onClose: () => void
+}
 
-export function AddIncomeModal({ onClose = () => {} }: Props) {
-  const [open, setOpen] = useState(true)
-  const { toast } = useToast()
-  useEffect(() => setOpen(true), [])
+export function AddIncomeModal({ onClose }: AddIncomeModalProps) {
+  const [amount, setAmount] = useState("")
+  const [source, setSource] = useState("")
+  const [description, setDescription] = useState("")
 
-  async function handleSubmit(formData: FormData) {
-    const amount = Number.parseFloat((formData.get("amount") as string) || "0")
-    const source = (formData.get("source") as string) || "Other"
-    const date = (formData.get("date") as string) || new Date().toISOString().slice(0, 10)
-    if (!amount || amount <= 0) {
-      toast({ title: "Please enter a valid amount." })
-      return
-    }
-    const tx = {
-      id: crypto.randomUUID(),
-      type: "income",
-      amount,
-      source,
-      date,
-      createdAt: Date.now(),
-    }
-    const store = JSON.parse(localStorage.getItem("transactions") || "[]")
-    store.push(tx)
-    localStorage.setItem("transactions", JSON.stringify(store))
-    toast({ title: "Income added!" })
-    setOpen(false)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Here you would typically save the income data
+    console.log("Adding income:", { amount, source, description })
     onClose()
   }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(o) => {
-        if (!o) {
-          setOpen(false)
-          onClose()
-        }
-      }}
-    >
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Income</DialogTitle>
+          <DialogTitle className="flex items-center">
+            <Plus className="mr-2 h-5 w-5 text-green-600" />
+            Add Income
+          </DialogTitle>
         </DialogHeader>
-        <form
-          action={(f) => {
-            handleSubmit(f)
-          }}
-          className="space-y-4"
-        >
-          <div>
-            <Label htmlFor="amount">Amount</Label>
-            <Input id="amount" name="amount" type="number" step="0.01" placeholder="0.00" required />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="amount">Amount ($)</Label>
+            <Input
+              id="amount"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+            />
           </div>
-          <div>
-            <Label>Source</Label>
-            <Select name="source" defaultValue="Job">
+          
+          <div className="space-y-2">
+            <Label htmlFor="source">Source</Label>
+            <Select value={source} onValueChange={setSource} required>
               <SelectTrigger>
-                <SelectValue placeholder="Choose source" />
+                <SelectValue placeholder="Select income source" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Job">Job</SelectItem>
-                <SelectItem value="Gift">Gift</SelectItem>
-                <SelectItem value="Allowance">Allowance</SelectItem>
-                <SelectItem value="Side Hustle">Side Hustle</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
+                <SelectItem value="allowance">Allowance</SelectItem>
+                <SelectItem value="chores">Chores</SelectItem>
+                <SelectItem value="job">Part-time Job</SelectItem>
+                <SelectItem value="gift">Gift Money</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <Label htmlFor="date">Date</Label>
-            <Input id="date" name="date" type="date" defaultValue={new Date().toISOString().slice(0, 10)} />
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description (Optional)</Label>
+            <Textarea
+              id="description"
+              placeholder="Add any notes about this income..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+            />
           </div>
-          <DialogFooter className="gap-2">
-            <Button type="button" variant="outline" onClick={() => (setOpen(false), onClose())}>
-              Cancel
-            </Button>
-            <Button type="submit">Save</Button>
-          </DialogFooter>
+
+          <div className="flex items-center justify-between pt-4">
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Coins className="mr-1 h-4 w-4 text-yellow-600" />
+              You'll earn +25 XP
+            </div>
+            <div className="flex space-x-2">
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                Add Income
+              </Button>
+            </div>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
